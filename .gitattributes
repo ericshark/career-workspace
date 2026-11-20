@@ -1,0 +1,2 @@
+# This fixture intentionally exercises Windows line endings.
+ui/tests/fixtures/applications.crlf.md -text whitespace=cr-at-eol

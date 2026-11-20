@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tailor Resume"
+  short_description: "Tailor a saved job resume and compare Resume Match"
+  default_prompt: "Use $tailor-resume to tailor my resume for this saved job and show the Match before and after."

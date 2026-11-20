@@ -1,0 +1,15 @@
+── source/tailored/acme-swe/resume.tex
+✓ no important warnings
+✓ 1 page
+  fill: 96% of the page (721.0pt of 751.6pt; ~100% = full)
+  ATS PARSING: source/tailored/acme-swe/resume.tex
+  ✓ Text extracted (530 words)
+  ✓ One page
+  ✗ Email not extracted
+  ✓ Phone extracted
+  ! Unusual symbols (most ATS read them, but plain ASCII is safest)
+      '∼' U+223C TILDE OPERATOR
+
+  FAIL
+
+✗ ATS check failed. Not copied. Inspect: /tmp/resume-build.AbC123/resume.pdf

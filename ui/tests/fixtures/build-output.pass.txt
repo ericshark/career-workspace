@@ -1,0 +1,27 @@
+── source/tech/resume.tex
+✓ no important warnings
+✓ 1 page
+  fill: 97% of the page (727.2pt of 751.6pt; ~100% = full)
+  ATS PARSING: source/tech/resume.tex
+  ✓ Text extracted (544 words)
+  ✓ One page
+  ✓ Name extracted
+  ✓ Email extracted
+  ✓ Phone extracted
+  ✓ Links extracted (3)
+  ✓ Section headings (Education, Technical Skills, Experience, Projects, Professional Development)
+  ✓ Education extracted
+  ✓ Technical Skills extracted
+  ✓ Experience extracted
+  ✓ Projects extracted
+  ✓ Professional Development extracted
+  ✓ Job/project headings (7)
+  ✓ Bullets intact (16)
+  ✓ Dates preserved (8)
+  ✓ Reading order correct
+  ✓ No corrupted characters
+
+  PASS
+
+✓ wrote resumes/tech/Resume.pdf
+✓ render: /TMP/png/tech.png

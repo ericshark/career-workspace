@@ -1,0 +1,4 @@
+── source/tailored/acme-swe/resume.tex
+! warnings:
+    Overfull \hbox (3.2pt too wide) in paragraph at lines 88--90
+✗ 2 pages; must be exactly 1. Not copied. Inspect: /tmp/resume-build.AbC123/resume.pdf

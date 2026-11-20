@@ -1,0 +1,6 @@
+── source/tailored/acme-swe/resume.tex
+✗ compile failed (pass 1). Errors:
+! Undefined control sequence.
+l.42 \resumeItemm
+                 {Built a thing}
+  full log: /tmp/resume-build.AbC123/resume.log

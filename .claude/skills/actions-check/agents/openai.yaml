@@ -1,0 +1,4 @@
+interface:
+  display_name: "Actions Check"
+  short_description: "Reconcile recruiting requests and completion evidence"
+  default_prompt: "Use $actions-check to refresh my recruiting tasks and review completion evidence."

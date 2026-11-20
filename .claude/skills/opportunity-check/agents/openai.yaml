@@ -1,0 +1,4 @@
+interface:
+  display_name: "Opportunity Check"
+  short_description: "Research recruiting emails and decide what is worth pursuing"
+  default_prompt: "Use $opportunity-check to research this company or recruiting email and recommend my next step."

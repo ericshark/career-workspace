@@ -1,0 +1,38 @@
+name: Local edition checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install resume tools on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-latex-recommended lmodern poppler-utils
+      - name: Install resume tools on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install poppler
+          brew install --cask basictex
+          echo /Library/TeX/texbin >> "$GITHUB_PATH"
+          sudo /Library/TeX/texbin/tlmgr update --self
+          sudo /Library/TeX/texbin/tlmgr install collection-latexrecommended lm
+      - run: ./scripts/setup.sh
+      - name: Verify templates, types, and offline workflows
+        run: ./scripts/verify.sh
+      - name: Install Chromium
+        run: npx --prefix ui playwright install chromium
+      - name: Verify the local edition in Chromium
+        run: npm run test:browser --prefix ui -- local-edition.spec.ts
+        env:
+          PW_HEADLESS: "true"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Career Check"
+  short_description: "Check recruiting mail and actions together"
+  default_prompt: "Use $career-check to check my recruiting mail and actions."
