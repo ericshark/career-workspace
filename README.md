@@ -4,7 +4,7 @@ A local app for organizing your job search, keeping track of applications and
 recruiting tasks, reviewing roles, and saving career notes. Start with an empty
 workspace and add your own data.
 
-![Dashboard showing example application activity](docs/screenshots/dashboard.png)
+![Dashboard with application counts, an application flow chart, updates and upcoming deadlines](docs/screenshots/dashboard.png)
 
 ## Quick start
 
@@ -122,7 +122,57 @@ optional extra versions. Resume and PDF tools need Python, TeX Live and Poppler
    Search by title. Text notes are editable, and PDFs can be opened or
    downloaded. Imports are copied into your local library.
 
-![Quick Add on the Apply screen](docs/screenshots/apply.png)
+## A tour of the app
+
+The screenshots show a fictional workspace. Your workspace starts empty.
+
+### Apply: Quick add and Review
+
+**Quick add** takes pasted job descriptions and logs them as applied today, up to
+50 per batch. History on the right lists summaries, reviews, jobs to apply to and
+jobs in progress.
+
+![Apply page with Quick add, the Review and Questions tabs, and History](docs/screenshots/apply-quick-add.png)
+
+**Review** scores a job before you apply. **Fit** compares your career profile
+with the role, and **Resume Match** compares your resume with it. The card also
+shows the verdict, why you fit, the main gaps, whether to use your master resume
+or tailor it, and which keywords are on or missing from your resume. From there
+you can ask about the review or draft application answers and a cover letter.
+
+![A job review with Fit and Resume Match scores, gaps and keywords](docs/screenshots/review.png)
+
+### Tracker and Actions
+
+**Tracker** lists every application with search, filters, sorting and status
+counts. Change a status in place, or open the review and timeline for a job.
+
+![Tracker table with status counts, search and filters](docs/screenshots/tracker.png)
+
+**Actions** collects follow-ups such as assessments and interviews, with due dates,
+links to the job summary and timeline, and Mark Completed or Dismiss.
+
+![Actions page with open assessments and due dates](docs/screenshots/actions.png)
+
+### Workshop
+
+**Workshop** keeps project ideas and projects together. Focus shows what you are
+working on now, with task progress and links.
+
+![Workshop Focus view with projects, ideas and task progress](docs/screenshots/workshop.png)
+
+Each project has tasks, docs and links on its **Overview** tab.
+
+![A project's Overview tab with a description and task list](docs/screenshots/workshop-project.png)
+
+The **Dev** tab shows the project's Git status, branches and commits, and can run
+its dev server or open it in VS Code. It acts only inside the project's own linked folder.
+
+![A project's Dev tab with Git status, branches and Run locally](docs/screenshots/workshop-dev.png)
+
+### Docs
+
+**Docs** is a local library for Markdown notes and PDFs, such as an interview checklist.
 
 ![Docs library with a Markdown interview checklist](docs/screenshots/docs.png)
 
