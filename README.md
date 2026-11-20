@@ -55,6 +55,41 @@ then use a key from that organization. Eligible ChatGPT subscribers can also
 [claim OpenAI API credits](https://developers.openai.com/api/docs/guides/chatgpt-api-credits)
 and use a project key from the linked organization.
 
+## Add your profile and resume
+
+Review and Tailor judge each job against two files that only you can provide.
+Setup creates both as placeholders. They are Git-ignored, so they stay on your
+machine and never reach GitHub.
+
+| File | What goes in it | What it drives |
+| --- | --- | --- |
+| `profile/career.md` | Your background as Markdown: experience, projects, education, skills, and target roles | **Fit** (how well your evidence matches the job), application answers, cover letters, and Tailor |
+| `source/tech/resume.tex` | Your resume as LaTeX | **Match** (how well the resume you would send matches the job) |
+
+**Your profile.** Open `profile/career.md` in any editor and replace each
+`<!-- … -->` prompt with text under its heading. Write what you did and can
+verify: employers and dates, what you personally built, the tools you used, and
+real numbers. Leave out anything you cannot back up. The AI is told to use only
+these facts and not to invent any. Review and Questions leave out a `Contact`
+section if you add one, and Review also skips `Example bullets` and
+`Summary Statements`. Tailor sends the whole file, so keep anything private out of it.
+
+**Your resume.** Open `source/tech/resume.tex` and replace each placeholder line
+(`Replace this line with…`) inside the existing `\resumeSubheading` and
+`\resumeItem` entries. To add a job or project, copy an existing block. Keep the
+template's structure so the checks can read it, then build it:
+
+```sh
+./scripts/build.sh source/tech/resume.tex --png ui/.cache/png
+```
+
+The build must produce exactly one page and an ATS PASS before it writes
+`resumes/tech/Resume.pdf`. Open the PNG to check the layout. Review scores
+every job against this tech master, and Tailor makes a job-specific copy
+without changing it. The `general` and `datacenter` masters in `source/` are
+optional extra versions. Resume and PDF tools need Python, TeX Live and Poppler
+(see [Resume tools](#resume-tools)).
+
 ## Try a job from start to finish
 
 1. **Start on Dashboard.** Check today's count and recruiting updates. You can
@@ -73,11 +108,12 @@ and use a project key from the linked organization.
 3. **Manage it in Tracker.** Find the record, open its details, or update the
    status. Use **Undo** immediately after a Quick Add if needed. View activity
    trends on Dashboard.
-4. **Review a role before applying.** Fill in `profile/career.md` with your
-   own verified facts. Edit `source/tech/resume.tex` with your actual resume,
-   then build it. Enable **Review** in Settings if hidden. Use **Apply → Review** for Fit and Match and **Tailor** for a
-   separate version. Review changed wording and the generated PDF before
-   using it. Apply also offers application answers and cover letter drafts.
+4. **Review a role before applying.** First add your own information to
+   `profile/career.md` and `source/tech/resume.tex`
+   ([how](#add-your-profile-and-resume)). Then use **Apply → Review** for Fit
+   and Match and **Tailor** for a separate version. Review changed wording and
+   the generated PDF before using it. **Apply → Questions** drafts application
+   answers and cover letters.
 5. **Plan your next steps.** Add an interview or follow-up under **Actions**.
    In **Workshop**, save ideas, turn them into projects, and keep project
    tasks and links together.
