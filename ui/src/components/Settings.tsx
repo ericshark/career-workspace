@@ -6,40 +6,7 @@ import { useState } from "react";
 import { ModelSettings } from "./ModelSettings";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-const key = "career-ui.hideQuestions";
-const subscribe = (fn: () => void) => {
-  window.addEventListener("storage", fn);
-  window.addEventListener("settings-changed", fn);
-  return () => {
-    window.removeEventListener("storage", fn);
-    window.removeEventListener("settings-changed", fn);
-  };
-};
-export function readHideQuestions() {
-  try {
-    return localStorage.getItem(key) !== "false";
-  } catch {
-    return true;
-  }
-}
-export function useHideQuestions() {
-  return useSyncExternalStore(subscribe, readHideQuestions, () => true);
-}
-const reviewKey = "career-ui.hideReview";
-// On by default; only an explicit saved "false" shows the Review button.
-export function readHideReview() {
-  try {
-    return localStorage.getItem(reviewKey) !== "false";
-  } catch {
-    return true;
-  }
-}
-export function useHideReview() {
-  return useSyncExternalStore(subscribe, readHideReview, () => true);
-}
 export function Settings() {
-  const hidden = useHideQuestions();
-  const reviewHidden = useHideReview();
   const { resolvedTheme, setTheme } = useTheme();
   const [modelsOpen, setModelsOpen] = useState(false);
   // Beside the sidebar button on wide screens; below the header button on phones.
@@ -75,38 +42,6 @@ export function Settings() {
             onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
           />
         </label>
-        <label
-          className="flex justify-between gap-4 text-sm"
-          title="Hide application questions and cover letters together"
-        >
-          Hide questions
-          <input
-            type="checkbox"
-            checked={hidden}
-            onChange={(e) => {
-              try {
-                localStorage.setItem(key, String(e.target.checked));
-              } catch {}
-              window.dispatchEvent(new Event("settings-changed"));
-            }}
-          />
-        </label>
-        <label
-          className="flex justify-between gap-4 text-sm"
-          title="Hide the Review button on the Apply page"
-        >
-          Hide review
-          <input
-            type="checkbox"
-            checked={reviewHidden}
-            onChange={(e) => {
-              try {
-                localStorage.setItem(reviewKey, String(e.target.checked));
-              } catch {}
-              window.dispatchEvent(new Event("settings-changed"));
-            }}
-          />
-        </label>
         <div className="border-t pt-3">
           <button
             type="button"
@@ -121,7 +56,7 @@ export function Settings() {
           </button>
           {modelsOpen && (
             <div className="pt-3">
-              <ModelSettings hideQuestions={hidden} />
+              <ModelSettings />
             </div>
           )}
         </div>

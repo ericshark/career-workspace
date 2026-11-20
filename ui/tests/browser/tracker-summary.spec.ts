@@ -1,9 +1,4 @@
 import { test, expect } from "@playwright/test";
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() =>
-    localStorage.setItem("career-ui.hideQuestions", "false"),
-  );
-});
 test("always-visible summary, saved outputs, confirmation, shared review and keyboard navigation", async ({
   page,
   request,

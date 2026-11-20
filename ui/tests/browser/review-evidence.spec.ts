@@ -13,9 +13,6 @@ for (const viewport of [
       request,
     }, info) => {
       await page.setViewportSize(viewport);
-      await page.addInitScript(() =>
-        localStorage.setItem("career-ui.hideQuestions", "false"),
-      );
       await page.addInitScript(
         (theme) => localStorage.setItem("career-ui.theme", theme),
         theme,

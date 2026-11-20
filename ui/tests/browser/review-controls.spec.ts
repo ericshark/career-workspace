@@ -3,11 +3,6 @@ import path from "node:path";
 import { test, expect } from "@playwright/test";
 import { fixtureScore } from "../../src/lib/claude/fixtures";
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() =>
-    localStorage.setItem("career-ui.hideQuestions", "false"),
-  );
-});
 for (const width of [1440, 390])
   test(`notifications, status editing, fixed columns and review controls at ${width}px`, async ({
     page,

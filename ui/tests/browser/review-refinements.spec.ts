@@ -5,9 +5,6 @@ for (const width of [1440, 390]) {
     page,
     request,
   }, info) => {
-    await page.addInitScript(() =>
-      localStorage.setItem("career-ui.hideQuestions", "false"),
-    );
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.setViewportSize({ width, height: 900 });

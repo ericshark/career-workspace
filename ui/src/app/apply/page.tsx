@@ -1,11 +1,6 @@
 "use client";
 import { toast } from "sonner";
 import {
-  useHideQuestions,
-  readHideQuestions,
-  useHideReview,
-} from "@/components/Settings";
-import {
   savedHistoryFilter,
   type HistoryFilter,
 } from "@/lib/reviewPresentation";
@@ -140,8 +135,6 @@ export default function ApplyPage() {
       );
   }, []);
 
-  const hideQuestions = useHideQuestions();
-  const hideReview = useHideReview();
   const [tab, setActiveTab] = useState<Tab>("quick");
   const tabRevision = useRef(0);
   function setTab(next: Tab) {
@@ -263,17 +256,6 @@ export default function ApplyPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (hideQuestions && tab === "questions") setTab("quick");
-  }, [hideQuestions, tab]);
-
-  // Turning Hide review on moves off the Review tab; opening a saved review from History still works.
-  useEffect(() => {
-    if (hideReview && tab === "review") setTab("quick");
-    // Only react to the setting changing, not to tab switches or History opens.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hideReview]);
-
   // Remembered model choices, the desktop/phone layout switch, and the
   // Tracker's deep link into the Questions tab.
   useEffect(() => {
@@ -283,11 +265,7 @@ export default function ApplyPage() {
       setHistoryOpen(window.matchMedia("(min-width: 1024px)").matches);
       const params = new URLSearchParams(window.location.search);
       const target = params.get("questions");
-      if (
-        !readHideQuestions() &&
-        target &&
-        /^[A-Za-z0-9-]{8,64}$/.test(target)
-      ) {
+      if (target && /^[A-Za-z0-9-]{8,64}$/.test(target)) {
         setQuestionsFor(target);
         setTab("questions");
       }
@@ -571,9 +549,7 @@ export default function ApplyPage() {
   async function quickAddWithExtras(sent: QuickDraft[]) {
     const ask = quickAsk;
     const target =
-      !hideQuestions && quickQuestionsOpen && wantsExtras(ask)
-        ? extrasDraft
-        : undefined;
+      quickQuestionsOpen && wantsExtras(ask) ? extrasDraft : undefined;
     const label = target
       ? draftLabel(target, quickDrafts.drafts.indexOf(target) + 1)
       : "";
@@ -744,33 +720,22 @@ export default function ApplyPage() {
               align="start"
               className="max-h-[75vh] w-80 max-w-[calc(100vw-1rem)] overflow-y-auto"
             >
-              <ModelSettings hideQuestions={hideQuestions} />
+              <ModelSettings />
             </PopoverContent>
           </Popover>
-          {/* With only Quick add on offer there is nothing to switch, so it reads as a plain label. */}
-          {hideReview && hideQuestions && tab === "quick" ? (
-            <span className="px-1 text-sm font-medium text-muted-foreground">
-              Quick add
-            </span>
-          ) : (
-            <SegmentedControl
-              ariaLabel="Mode"
-              value={tab}
-              onChange={(t) => {
-                if (tab === "quick" && t !== "quick") dismissBatchTop();
-                setTab(t as Tab);
-              }}
-              options={[
-                { value: "quick", label: "Quick add" },
-                ...(!hideReview || tab === "review"
-                  ? [{ value: "review", label: "Review" }]
-                  : []),
-                ...(!hideQuestions
-                  ? [{ value: "questions", label: "Questions" }]
-                  : []),
-              ]}
-            />
-          )}
+          <SegmentedControl
+            ariaLabel="Mode"
+            value={tab}
+            onChange={(t) => {
+              if (tab === "quick" && t !== "quick") dismissBatchTop();
+              setTab(t as Tab);
+            }}
+            options={[
+              { value: "quick", label: "Quick add" },
+              { value: "review", label: "Review" },
+              { value: "questions", label: "Questions" },
+            ]}
+          />
         </div>
 
         {progress.data ? (
@@ -793,7 +758,7 @@ export default function ApplyPage() {
           onDismissTop={(id) => dismissBatchTop(id)}
         />
 
-        {tab === "questions" && !hideQuestions ? (
+        {tab === "questions" ? (
           <QuestionsTab
             key={questionsReset}
             model={extrasModel}

@@ -1,6 +1,5 @@
 "use client";
 import { ReviewDecisionSummary } from "./ReviewDecisionSummary";
-import { useHideQuestions } from "@/components/Settings";
 import type { ScoreResult, Status } from "@/lib/types";
 import type { ReviewContext } from "@/lib/reviewContext";
 import {
@@ -80,7 +79,6 @@ export default function ReviewCard({
     exact: r.duplicates.exact.filter(otherMatch),
     possible: r.duplicates.possible.filter(otherMatch),
   };
-  const hideQuestions = useHideQuestions();
   const recommended = reviewTailoring(r);
   const brief = reviewDecisionBrief(r);
   const actions = reviewDecisionActions(context ? context.status : "loading");
@@ -238,18 +236,16 @@ export default function ReviewCard({
             <MessageCircleIcon />
             Ask about this review
           </Button>
-          {!hideQuestions && (
-            <Button
-              size="default"
-              className="h-9 px-3 text-primary"
-              variant={questionsOpen ? "secondary" : "outline"}
-              onClick={onQuestions}
-              aria-expanded={questionsOpen}
-            >
-              <FileTextIcon />
-              Questions &amp; cover letter
-            </Button>
-          )}
+          <Button
+            size="default"
+            className="h-9 px-3 text-primary"
+            variant={questionsOpen ? "secondary" : "outline"}
+            onClick={onQuestions}
+            aria-expanded={questionsOpen}
+          >
+            <FileTextIcon />
+            Questions &amp; cover letter
+          </Button>
           {!tailoredResume && (
             <Button
               size="default"

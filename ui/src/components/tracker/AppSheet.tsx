@@ -1,7 +1,6 @@
 "use client";
 import { ActivityPanel, useRecruiting } from "@/components/Recruiting";
 import { hasActionHistory } from "@/lib/recruitingTypes";
-import { useHideQuestions } from "@/components/Settings";
 import Link from "next/link";
 import { useFetchJson } from "@/components/useFetchJson";
 import type { OpportunityReport } from "@/lib/opportunities";
@@ -72,7 +71,6 @@ export function AppSheet({
   onMove: (s: Status, date?: string) => void;
   onRemove: () => void;
 }) {
-  const hideQuestions = useHideQuestions();
   const recruiting = useRecruiting();
   const opportunities = useFetchJson<OpportunityReport[]>(
     "/api/opportunities",
@@ -97,10 +95,6 @@ export function AppSheet({
     content.current?.parentElement?.scrollTo({ top: 0 });
   }, [view]);
   const [originalOpen, setOriginalOpen] = useState(false);
-  useEffect(() => {
-    if (hideQuestions && (view === "answers" || view === "letter"))
-      setView("summary");
-  }, [hideQuestions, view]);
   const [confirm, setConfirm] = useState(false);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -221,11 +215,8 @@ export function AppSheet({
       (!!r.recordId && r.recordId === row.recordId),
   );
   const sources = details?.contentSources ?? [];
-  const hasAnswers =
-    !hideQuestions &&
-    sources.some((source) => source.extras?.questions?.length);
-  const hasLetter =
-    !hideQuestions && sources.some((source) => source.extras?.coverLetter);
+  const hasAnswers = sources.some((source) => source.extras?.questions?.length);
+  const hasLetter = sources.some((source) => source.extras?.coverLetter);
   const canCreateReview = !!(
     details?.original?.trim() || details?.displayBrief
   );
@@ -445,7 +436,7 @@ export function AppSheet({
             }
           />
         )}
-        {!hideQuestions && (view === "answers" || view === "letter") && (
+        {(view === "answers" || view === "letter") && (
           <article className="space-y-6">
             {sources
               .filter((source) =>
@@ -572,7 +563,7 @@ export function AppSheet({
                   Create review
                 </Button>
               )}
-              {!hideQuestions && (hasAnswers || hasLetter) && (
+              {(hasAnswers || hasLetter) && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button size="sm" variant="outline">
@@ -595,7 +586,7 @@ export function AppSheet({
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
-              {!readOnly && details && !hideQuestions && (
+              {!readOnly && details && (
                 <Button size="sm" variant="outline" asChild>
                   <a
                     href={`/apply?questions=${encodeURIComponent(details.id)}`}

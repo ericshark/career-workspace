@@ -8,11 +8,6 @@ const post =
     3,
   );
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() =>
-    localStorage.setItem("career-ui.hideQuestions", "false"),
-  );
-});
 test("keyboard menus, segmented controls, named modal, trapped focus and opener restoration", async ({
   page,
 }) => {

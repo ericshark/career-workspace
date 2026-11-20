@@ -1,5 +1,4 @@
 "use client";
-import { useHideQuestions } from "@/components/Settings";
 import { useEffect, useId, useRef, useState } from "react";
 import {
   CheckIcon,
@@ -104,7 +103,6 @@ export function ExtrasFields({
   onChange: (v: ExtrasAsk) => void;
   disabled?: boolean;
 }) {
-  const hideQuestions = useHideQuestions();
   const boxes = value.questions.length ? value.questions : [""];
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
   const inputs = useRef<(HTMLTextAreaElement | null)[]>([]);
@@ -116,7 +114,6 @@ export function ExtrasFields({
   const setBoxes = (questions: string[]) => onChange({ ...value, questions });
   const noteId = useId();
   const coverLetterId = useId();
-  if (hideQuestions) return null;
   return (
     <div className="flex flex-col gap-2">
       <details>
@@ -141,94 +138,88 @@ export function ExtrasFields({
           />
         </Field>
       </details>
-      {!hideQuestions && (
-        <>
-          <div className="pt-1 text-xs font-medium text-muted-foreground">
-            Application questions (optional, one per box)
-          </div>
-          <ol className="flex flex-col gap-2">
-            {boxes.map((q, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="w-6 shrink-0 pt-2 text-xs font-semibold text-muted-foreground">
-                  Q{i + 1}
-                </span>
-                <Textarea
-                  ref={(el) => {
-                    inputs.current[i] = el;
-                  }}
-                  rows={2}
-                  aria-label={`Question ${i + 1}`}
-                  className="min-h-16 min-w-0 flex-1 resize-y leading-relaxed"
-                  placeholder={
-                    i === 0
-                      ? "Paste the whole question, e.g. Why do you want to work here?"
-                      : "Paste the next question"
-                  }
-                  value={q}
-                  disabled={disabled}
-                  onChange={(e) =>
-                    setBoxes(
-                      boxes.map((b, j) => (j === i ? e.target.value : b)),
-                    )
-                  }
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="mt-1 text-muted-foreground"
-                  onClick={() => {
-                    const rest = boxes.filter((_, j) => j !== i);
-                    setBoxes(rest.length ? rest : [""]);
-                  }}
-                  disabled={disabled || (boxes.length === 1 && !q.trim())}
-                  aria-label={`Remove question ${i + 1}`}
-                  title="Remove this question"
-                >
-                  <XIcon />
-                </Button>
-              </li>
-            ))}
-          </ol>
-          <div className="flex flex-wrap items-center gap-4">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-primary"
-              disabled={disabled}
-              onClick={() => {
-                setBoxes([...boxes, ""]);
-                setFocusIndex(boxes.length);
-              }}
-            >
-              <PlusIcon data-icon="inline-start" />
-              Add question
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-primary"
-              disabled={disabled || boxes.includes(YC_INTRO_QUESTION)}
-              title="Add the Y Combinator 'Start a conversation with the team' message"
-              onClick={() => {
-                const empty = boxes.findIndex((b) => !b.trim());
-                setBoxes(
-                  empty === -1
-                    ? [...boxes, YC_INTRO_QUESTION]
-                    : boxes.map((b, j) =>
-                        j === empty ? YC_INTRO_QUESTION : b,
-                      ),
-                );
-              }}
-            >
-              <PlusIcon data-icon="inline-start" />
-              YC intro message
-            </Button>
-          </div>
-        </>
-      )}
+      <>
+        <div className="pt-1 text-xs font-medium text-muted-foreground">
+          Application questions (optional, one per box)
+        </div>
+        <ol className="flex flex-col gap-2">
+          {boxes.map((q, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="w-6 shrink-0 pt-2 text-xs font-semibold text-muted-foreground">
+                Q{i + 1}
+              </span>
+              <Textarea
+                ref={(el) => {
+                  inputs.current[i] = el;
+                }}
+                rows={2}
+                aria-label={`Question ${i + 1}`}
+                className="min-h-16 min-w-0 flex-1 resize-y leading-relaxed"
+                placeholder={
+                  i === 0
+                    ? "Paste the whole question, e.g. Why do you want to work here?"
+                    : "Paste the next question"
+                }
+                value={q}
+                disabled={disabled}
+                onChange={(e) =>
+                  setBoxes(boxes.map((b, j) => (j === i ? e.target.value : b)))
+                }
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="mt-1 text-muted-foreground"
+                onClick={() => {
+                  const rest = boxes.filter((_, j) => j !== i);
+                  setBoxes(rest.length ? rest : [""]);
+                }}
+                disabled={disabled || (boxes.length === 1 && !q.trim())}
+                aria-label={`Remove question ${i + 1}`}
+                title="Remove this question"
+              >
+                <XIcon />
+              </Button>
+            </li>
+          ))}
+        </ol>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-primary"
+            disabled={disabled}
+            onClick={() => {
+              setBoxes([...boxes, ""]);
+              setFocusIndex(boxes.length);
+            }}
+          >
+            <PlusIcon data-icon="inline-start" />
+            Add question
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-primary"
+            disabled={disabled || boxes.includes(YC_INTRO_QUESTION)}
+            title="Add the Y Combinator 'Start a conversation with the team' message"
+            onClick={() => {
+              const empty = boxes.findIndex((b) => !b.trim());
+              setBoxes(
+                empty === -1
+                  ? [...boxes, YC_INTRO_QUESTION]
+                  : boxes.map((b, j) => (j === empty ? YC_INTRO_QUESTION : b)),
+              );
+            }}
+          >
+            <PlusIcon data-icon="inline-start" />
+            YC intro message
+          </Button>
+        </div>
+      </>
       <div className="flex items-center gap-2">
         <Checkbox
           id={coverLetterId}
@@ -341,7 +332,6 @@ export default function ExtrasPanel({
   model: ModelId;
   autoStart?: ExtrasAsk;
 }) {
-  const hideQuestions = useHideQuestions();
   const [ask, setAsk] = useState<ExtrasAsk>(autoStart ?? NO_EXTRAS);
   const [extras, setExtras] = useState<ApplicationExtras | null>(null);
   const [busy, setBusy] = useState(false);
@@ -366,7 +356,7 @@ export default function ExtrasPanel({
   }, [target.id]);
 
   async function generate(request: ExtrasAsk) {
-    if (hideQuestions || busy || !wantsExtras(request)) return;
+    if (busy || !wantsExtras(request)) return;
     setBusy(true);
     setError(null);
     try {
@@ -375,7 +365,7 @@ export default function ExtrasPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           target,
-          ...(!hideQuestions && askedQuestions(request).length
+          ...(askedQuestions(request).length
             ? { questions: askedQuestions(request) }
             : {}),
           ...(request.coverLetter ? { coverLetter: true } : {}),
@@ -400,18 +390,12 @@ export default function ExtrasPanel({
 
   // Strict mode mounts twice in development; the ref keeps this to one call.
   useEffect(() => {
-    if (
-      !hideQuestions &&
-      autoStart &&
-      wantsExtras(autoStart) &&
-      !started.current
-    ) {
+    if (autoStart && wantsExtras(autoStart) && !started.current) {
       started.current = true;
       void generate(autoStart);
     }
   }, []);
 
-  if (hideQuestions) return null;
   const sets = [...(extras?.questions ?? [])].reverse();
   const hasResults = sets.length > 0 || !!extras?.coverLetter;
   return (

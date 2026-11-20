@@ -1,5 +1,4 @@
 "use client";
-import { useHideQuestions } from "@/components/Settings";
 import { ExtrasFields, NO_EXTRAS, type ExtrasAsk } from "../ExtrasPanel";
 import { PlusIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,7 +54,6 @@ export function QuickAddTab({
   onExtrasDraft: (id: string) => void;
   submitButton: React.ReactNode;
 }) {
-  const hideQuestions = useHideQuestions();
   return (
     <>
       <QuickJobList
@@ -68,7 +66,7 @@ export function QuickAddTab({
         onSubmit={onSubmit}
       />
 
-      {questionsOpen && !hideQuestions && (
+      {questionsOpen && (
         <div
           className="animate-rise flex flex-col gap-3 rounded-lg border p-3"
           aria-label="Questions for one job"
@@ -120,7 +118,7 @@ export function QuickAddTab({
 
       <Separator />
       <div className="flex flex-wrap items-center gap-2">
-        {!questionsOpen && !hideQuestions && (
+        {!questionsOpen && (
           <Button
             type="button"
             variant="outline"

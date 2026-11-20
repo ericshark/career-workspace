@@ -24,7 +24,7 @@ export const PREFERENCES_CHANGED = "preferences-changed";
  * operation. Each change re-reads the stored preferences before saving, one at
  * a time, so quick successive changes never overwrite each other.
  */
-export function ModelSettings({ hideQuestions }: { hideQuestions: boolean }) {
+export function ModelSettings() {
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [error, setError] = useState("");
   const queue = useRef<Promise<void>>(Promise.resolve());
@@ -67,9 +67,6 @@ export function ModelSettings({ hideQuestions }: { hideQuestions: boolean }) {
       <p className="text-xs text-muted-foreground">{error || "Loading…"}</p>
     );
 
-  const operations = MODEL_OPERATIONS.filter(
-    (entry) => entry.id !== "extras" || !hideQuestions,
-  );
   return (
     <div className="flex flex-col gap-3 text-xs font-medium text-muted-foreground">
       <div className="flex flex-col gap-1.5">
@@ -90,7 +87,7 @@ export function ModelSettings({ hideQuestions }: { hideQuestions: boolean }) {
         <AiConnection provider={prefs.provider} />
       </div>
 
-      {operations.map((entry) => (
+      {MODEL_OPERATIONS.map((entry) => (
         <OperationSection
           key={entry.id}
           id={entry.id}

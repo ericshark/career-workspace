@@ -8,7 +8,7 @@ test("settings, paste focus, blank-card submission and compact responsive histor
   await page.goto("/apply");
   await expect(
     page.getByRole("radio", { name: "Questions", exact: true }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await page
     .getByRole("textbox", { name: "Job 1 description", exact: true })
     .focus();
@@ -41,23 +41,10 @@ test("settings, paste focus, blank-card submission and compact responsive histor
     .getByRole("button", { name: "Settings", exact: true })
     .first()
     .click();
-  await page.getByLabel("Hide questions", { exact: true }).uncheck();
-  // Hide review persists across reloads and removes the Review button.
-  await page.getByLabel("Hide review", { exact: true }).check();
+  await expect(page.getByLabel("Hide questions")).toHaveCount(0);
+  await expect(page.getByLabel("Hide review")).toHaveCount(0);
   await page.keyboard.press("Escape");
-  await expect(
-    page.getByRole("radio", { name: "Review", exact: true }),
-  ).toHaveCount(0);
-  await page.reload();
-  await expect(
-    page.getByRole("radio", { name: "Review", exact: true }),
-  ).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Settings", exact: true })
-    .first()
-    .click();
-  await page.getByLabel("Hide review", { exact: true }).uncheck();
-  await page.keyboard.press("Escape");
+  // Review and Questions are always available, including after a reload.
   await expect(
     page.getByRole("radio", { name: "Review", exact: true }),
   ).toBeVisible();
@@ -66,13 +53,15 @@ test("settings, paste focus, blank-card submission and compact responsive histor
   ).toBeVisible();
   await page.reload();
   await expect(
+    page.getByRole("radio", { name: "Review", exact: true }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("radio", { name: "Questions", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Settings", exact: true })
     .first()
     .click();
-  await page.getByLabel("Hide questions", { exact: true }).check();
   await page.getByLabel("Night mode").check();
   await expect(page.locator("html")).toHaveClass(/dark/);
   await page.keyboard.press("Escape");
@@ -110,7 +99,7 @@ test("settings, paste focus, blank-card submission and compact responsive histor
   ).toBeVisible();
   await expect(
     modal.getByRole("link", { name: "Questions", exact: true }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await expect(modal.getByLabel("Resume: tech", { exact: true })).toHaveCount(
     0,
   );
@@ -207,7 +196,7 @@ test("linked history summaries, progress reviews, legend and saved cover letters
   await expect(page.getByLabel("Review ranking legend")).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Questions & cover letter", exact: true }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await expect(page.getByText("tech resume", { exact: true })).toHaveCount(0);
   await expect(page.getByLabel("Completed review", { exact: true })).toHaveCSS(
     "opacity",
@@ -217,9 +206,6 @@ test("linked history summaries, progress reviews, legend and saved cover letters
     path: info.outputPath("review-legend.png"),
     fullPage: true,
   });
-  await page.evaluate(() =>
-    localStorage.setItem("career-ui.hideQuestions", "false"),
-  );
   await page.goto(`/tracker?application=${id}`);
   await page
     .getByRole("dialog")

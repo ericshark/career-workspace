@@ -1,5 +1,4 @@
 "use client";
-import { useHideQuestions } from "./Settings";
 import { useEffect, useRef, useState } from "react";
 import type {
   ModelId,
@@ -54,7 +53,6 @@ export function ReviewWorkspace({
     null,
   );
   const result = correctedResult ?? initialResult;
-  const hideQuestions = useHideQuestions();
   const [context, setContext] = useState<ReviewContext | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [resume, setResume] = useState<string>(result.resume);
@@ -359,7 +357,7 @@ export function ReviewWorkspace({
           <ReviewFollowUp runId={result.runId} model={extrasModel} />
         </div>
       )}
-      {questionsOpen && !hideQuestions && (
+      {questionsOpen && (
         <div ref={questionsRef} className="scroll-mt-24">
           <ExtrasPanel
             target={{ kind: "review", id: result.runId }}
