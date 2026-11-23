@@ -36,3 +36,20 @@ jobs:
         run: npm run test:browser --prefix ui -- local-edition.spec.ts
         env:
           PW_HEADLESS: "true"
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: demo
+      - run: npm run build
+        working-directory: demo
+      - run: npx playwright install --with-deps chromium
+        working-directory: demo
+      - run: npm run test:browser
+        working-directory: demo
+        env:
+          PW_HEADLESS: "true"
