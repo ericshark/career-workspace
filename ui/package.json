@@ -13,7 +13,7 @@
     "start": "node scripts/serve.mjs start",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --incremental false",
     "test:browser": "node scripts/browser-tests.mjs",
     "verify:providers": "tsx scripts/verify-providers.ts"
   },

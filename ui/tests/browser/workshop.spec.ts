@@ -2227,3 +2227,41 @@ test("ideas can hold links and a doc chip; several docs open from one menu", asy
   await page.getByRole("menuitem", { name: "Open doc Research" }).click();
   await expect(page.getByRole("dialog", { name: "Research" })).toBeVisible();
 });
+
+test("Up next titles keep their width on a phone", async ({
+  page,
+  request,
+}) => {
+  const state = await seed(request, {
+    operation: "add",
+    kind: "project",
+    title: "Queued project with a longer title",
+  });
+  const id = idOf(state, "Queued project with a longer title");
+  await seed(
+    request,
+    { operation: "addTasks", id, tasks: [{ title: "First task" }] },
+    { operation: "place", id, section: "next" },
+  );
+  const item = row(page, "Queued project with a longer title");
+  const start = item.getByRole("button", { name: /^Start / });
+  const heading = item.getByRole("heading", { level: 3 });
+  const shape = async () => ({
+    title: (await heading.boundingBox())!,
+    start: (await start.boundingBox())!,
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/workshop");
+  await expect(start).toBeVisible();
+  const phone = await shape();
+  expect(phone.title.width).toBeGreaterThan(200);
+  expect(phone.start.y).toBeGreaterThan(phone.title.y + phone.title.height);
+
+  // Desktop keeps one row.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const desktop = await shape();
+  expect(desktop.start.x).toBeGreaterThan(
+    desktop.title.x + desktop.title.width,
+  );
+});

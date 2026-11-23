@@ -774,11 +774,14 @@ export function CompactRow({
         "flex cursor-pointer items-start gap-3 transition-colors",
         // Up next items are separate cards, matching Working on.
         start
-          ? "rounded-xl border bg-card px-4 py-4 shadow-xs transition-shadow hover:shadow-md"
+          ? "rounded-xl border bg-card px-4 py-4 shadow-xs max-sm:flex-wrap transition-shadow hover:shadow-md"
           : "px-3 py-2.5 hover:bg-muted/40",
       )}
     >
-      <div className="min-w-0 flex-1 space-y-1">
+      {/* On phones the progress and actions wrap below an Up next title. */}
+      <div
+        className={cn("min-w-0 flex-1 space-y-1", start && "max-sm:basis-full")}
+      >
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <h3
             className={cn(
@@ -825,7 +828,7 @@ export function CompactRow({
       >
         <ProgressBar item={item} size="sm" />
       </div>
-      <div className="flex shrink-0 items-center gap-2 self-center">
+      <div className="ml-auto flex shrink-0 items-center gap-2 self-center">
         {rating}
         {start && (
           <Button

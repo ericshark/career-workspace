@@ -8,13 +8,3 @@
     display: none;
   }
 }
-
-/* Phones: let a Workshop row's progress and Start button wrap below its title. */
-@media (max-width: 639px) {
-  main :has(> .min-w-0.flex-1.space-y-1):has(> .shrink-0.self-center) {
-    flex-wrap: wrap;
-  }
-  main :has(> .shrink-0.self-center) > .min-w-0.flex-1.space-y-1 {
-    flex-basis: 80%;
-  }
-}

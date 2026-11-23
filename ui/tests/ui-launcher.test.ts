@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import os from "node:os";
+import net from "node:net";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { afterEach, expect, it } from "vitest";
@@ -38,7 +39,21 @@ it("reports the port owned by the checkout launcher", () => {
 it("ignores a stale pid now owned by an unrelated process", () => {
   expect(status("node another-app.js")).toContain("not running");
 });
-it("reuses a current build and rebuilds when UI inputs change", () => {
+
+/** A port nothing is using, so the launcher starts even while another app holds one. */
+function freePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const { port } = server.address() as net.AddressInfo;
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+it("reuses a current build and rebuilds when UI inputs change", async () => {
+  const port = String(await freePort());
   fixture = fs.mkdtempSync(path.join(os.tmpdir(), "career-build-"));
   const launcher = path.join(fixture, "serve.mjs");
   fs.copyFileSync(path.join(repo, "ui/scripts/serve.mjs"), launcher);
@@ -59,7 +74,7 @@ it("reuses a current build and rebuilds when UI inputs change", () => {
   const start = () =>
     execFileSync(process.execPath, [launcher], {
       cwd: fixture,
-      env: { ...process.env, CAREER_PORT: "43989" },
+      env: { ...process.env, CAREER_PORT: port },
       encoding: "utf8",
     });
   expect(start()).toMatch(/^build$/m);
