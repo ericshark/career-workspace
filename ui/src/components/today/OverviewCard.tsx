@@ -88,13 +88,40 @@ export function OverviewCard({
     >
       <div className="flex min-w-0 flex-col justify-start gap-4 xl:col-span-2">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="All time" value={progress.allTime} />
-          <Stat label="This week" value={week} target={progress.week.target} />
-          <Stat label="Today" value={applied} target={progress.today.target} />
+          <Stat
+            label="All time"
+            value={progress.allTime}
+            average={average(
+              progress.averages.perActiveDay,
+              "per active day (days you applied)",
+            )}
+          />
+          <Stat
+            label="This week"
+            value={week}
+            target={progress.week.target}
+            average={average(progress.averages.perWeekday, "per weekday")}
+          />
+          <Stat
+            label="Today"
+            value={applied}
+            target={progress.today.target}
+            average={average(
+              progress.averages.perCalendarDay,
+              "per calendar day",
+            )}
+          />
           <Stat
             label="Total rejected"
             value={history.totalRejected}
             corner={`${rejectedShare}% of all time`}
+            average={average(
+              progress.averages.elapsedDays
+                ? history.totalRejected / (progress.averages.elapsedDays / 7)
+                : null,
+              "rejections per week",
+              true,
+            )}
           />
         </div>
         <WeekStrip
@@ -146,18 +173,38 @@ export function OverviewCard({
   );
 }
 
+/** "avg 6.4" plus a tooltip sentence, or null while there is no data yet. */
+function average(
+  value: number | null,
+  per: string,
+  /** The value is already a rate, not an application count. */
+  rate = false,
+) {
+  if (value === null) return null;
+  const n = value.toFixed(1);
+  return {
+    text: `avg ${n}`,
+    description: rate
+      ? `Average ${n} ${per}`
+      : `Average ${n} applications ${per}`,
+  };
+}
+
 /** The same compact typography for counts and application goals. */
 function Stat({
   label,
   value,
   target,
   corner,
+  average,
 }: {
   label: string;
   value: number;
   target?: number;
   /** Small muted note at the card's bottom-right (e.g. a share of all time). */
   corner?: string;
+  /** Small rolling average beside the number; hover for what it measures. */
+  average?: { text: string; description: string } | null;
 }) {
   const met = target !== undefined && value >= target;
   const percent = target ? Math.min(100, (value / target) * 100) : 0;
@@ -168,7 +215,7 @@ function Stat({
       className="relative flex min-h-[104px] min-w-0 flex-col rounded-lg border bg-muted/30 px-4 py-3.5"
     >
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 font-mono tabular-nums">
+      <p className="mt-2 flex items-baseline gap-x-1 font-mono sm:gap-x-1.5 tabular-nums">
         <span
           className={cn(
             "text-3xl leading-none font-semibold tracking-tight",
@@ -178,7 +225,19 @@ function Stat({
           {value}
         </span>
         {target !== undefined && (
-          <span className="text-xs text-muted-foreground">/ {target}</span>
+          <span className="text-xs whitespace-nowrap text-muted-foreground">
+            / {target}
+          </span>
+        )}
+        {average && (
+          <span
+            tabIndex={0}
+            title={average.description}
+            aria-label={average.description}
+            className="ml-auto cursor-help whitespace-nowrap rounded-sm pl-1 text-[10px] sm:pl-2 text-muted-foreground/80 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            {average.text}
+          </span>
         )}
       </p>
       {corner && (

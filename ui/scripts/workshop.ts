@@ -21,7 +21,7 @@ const USAGE = `scripts/workshop.sh <command> [options]   (output is JSON)
   find QUERY                                      exact / possible title matches, archived included
   add --kind idea|project --title T [--description D] [--category NAME [--create-category]]
       [--rating 0-10 (ideas)]
-      [--github URL --local PATH --live URL (projects)] [--link URL]... [--task TITLE]...
+      [--github URL --local PATH --live URL] [--link URL]... [--task TITLE]...
       [--doc-title T --doc-file FILE] [--force]   refuses likely duplicates unless --force
   update REF [--title --description --category NAME|none --rating --github --local --live]
   status REF Active|Built                         project stage
@@ -195,8 +195,6 @@ async function main() {
         process.exit(2);
       }
       if (o.priority !== undefined) die(PRIORITY_REMOVED);
-      if (kind === "idea" && (o.github || o.local || o.live))
-        die("Ideas cannot have repo links; add them to a project.");
       if (kind === "project" && o.rating !== undefined)
         die("Only ideas have a rating.");
       const category = o.category
@@ -271,7 +269,6 @@ async function main() {
         ["live", "liveUrl"],
       ] as const) {
         if (o[flag] === undefined) continue;
-        if (item.kind !== "project") die("Only projects have repo links.");
         draft[field] = o[flag]!;
       }
       if (o.link) draft.links = [...new Set([...draft.links, ...o.link])];

@@ -63,6 +63,47 @@ export function bestStreak(byDay: Record<string, number>): number {
   return best;
 }
 
+/**
+ * Rolling averages over completed days: the first application's date through yesterday.
+ * Today is left out of both the numerator and the denominator so a half-finished day
+ * never drags the numbers down; it joins them tomorrow.
+ */
+export function computeAverages(
+  byDay: Record<string, number>,
+  today: string,
+): Progress["averages"] {
+  const lastDay = addDays(today, -1);
+  const dates = Object.keys(byDay).filter((d) => d <= lastDay);
+  if (!dates.length) {
+    return {
+      perWeekday: null,
+      perActiveDay: null,
+      perCalendarDay: null,
+      elapsedDays: null,
+    };
+  }
+  const first = dates.reduce((a, b) => (a < b ? a : b));
+  let total = 0;
+  let activeDays = 0;
+  for (const d of dates) {
+    total += byDay[d];
+    if (byDay[d] > 0) activeDays++;
+  }
+  let calendarDays = 0;
+  let weekdays = 0;
+  for (let d = first; d <= lastDay; d = addDays(d, 1)) {
+    calendarDays++;
+    if (isWeekday(d)) weekdays++;
+  }
+  return {
+    // A span of only weekend days has no weekdays to divide by.
+    perWeekday: weekdays ? total / weekdays : null,
+    perActiveDay: activeDays ? total / activeDays : null,
+    perCalendarDay: total / calendarDays,
+    elapsedDays: calendarDays,
+  };
+}
+
 /** A row counts as "sent" for any status except `to apply` (later statuses still mean it was sent). */
 function isSubmitted(r: ApplicationRow): boolean {
   return r.status !== "to apply";
@@ -144,6 +185,7 @@ export function computeProgress(
     last5,
     allTime: sent.length,
     rejected: sent.filter((row) => isRejectedStatus(row.status)).length,
+    averages: computeAverages(byDay, today),
     plan: null,
   };
 }

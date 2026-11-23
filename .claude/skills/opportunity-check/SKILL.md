@@ -1,6 +1,6 @@
 ---
 name: opportunity-check
-description: "Research a recruiting email or company using Gmail, the workspace owner's application history, and current web sources; summarize the request, role, pay, reputation, fit, and whether to proceed. Use for opportunity checks or deciding whether a recruiter request is worth pursuing. Without a named company or email, offer a selection from Action Needed. For inbox auditing and label/status maintenance, use inbox-check instead."
+description: "Research a recruiting email or company using Gmail, the workspace owner's application history, and current web sources; summarize the request, role, pay, reputation, fit, and whether to proceed. Use for opportunity checks or deciding whether a recruiter request is worth pursuing. Without a named company or email, offer a selection of recent recruiting conversations. For inbox scanning and status updates, use inbox-check instead."
 ---
 
 # Opportunity Check
@@ -11,45 +11,42 @@ briefing inline in chat, with linked evidence and a clear next step.
 ## Select the opportunity
 
 Discover the connected Gmail tools by capability rather than a fixed server
-prefix. Use the same Gmail connector as inbox-check, but only its search and read
-capabilities. Current tools include `search_emails`, `search_email_ids`,
-`read_email_thread`, `read_email`, and `list_labels`; inspect their current input
-schemas before calling them. Read all pages for the searches needed below. If
+prefix. Use the same Gmail connector as inbox-check, with search and read
+capabilities only, and inspect their current input schemas before calling them. Read all pages for the searches needed below. If
 Gmail is unavailable, explain the blocker and stop; do not substitute unrelated
 mail sources or run inbox-check.
 
 - **Company named:** search relevant conversations by company, verified domain,
-  and role when supplied. Do not restrict to Action Needed. Proceed directly if
+  and role when supplied. Proceed directly if
   the opportunity is clear; ask the workspace owner to choose if distinct roles or requests
   leave the intended opportunity ambiguous.
 - **Email referenced:** resolve it from the supplied link, identifier, quoted
-  content, or conversation context, then read its full thread. Do not require an
-  Action Needed label. Search related mail only as needed. If the reference
+  content, or conversation context, then read its full thread. Search related mail only as needed. If the reference
   cannot be resolved uniquely, ask for the identifying detail that is missing.
-- **Neither supplied:** resolve the existing **Action Needed** label using
-  `list_labels` (search form `label:action-needed`). If missing, explain and stop;
-  never create it. Search the entire label with pagination, read the threads,
-  and group messages about the same opportunity. Keep distinct roles separate;
-  use job IDs/URLs and company + role to avoid merging unrelated openings.
-  Show the five most recent opportunities by latest message date, with company,
-  role, requested action, and deadline if stated. Ask which to research before
-  doing company research. If empty, say so and stop.
+- **Neither supplied:** combine open Actions (`scripts/apps.sh actions list --json`)
+  with an all-mail search of the last 30 days for recruiting conversations that
+  ask for something. Follow every page, read the threads, and group messages
+  about the same opportunity. Keep distinct roles separate; use job IDs/URLs and
+  company + role to avoid merging unrelated openings. Show the five most recent
+  opportunities by latest message date, with company, role, requested action,
+  and deadline if stated. Ask which to research before doing company research.
+  If empty, say so and stop.
 
 Accept one, several, a company name, or **more** (the next five). **All** means
-every opportunity under Action Needed, including those outside the initial five.
+every opportunity found, including those outside the initial five.
 Retain the discovered list during selection. Do not silently truncate an all
 request; disclose any connector failure that prevents complete coverage.
 
 Examples: `$opportunity-check Northbeam Talent`, `$opportunity-check the recruiter
-email about the AI voice screening`, or `$opportunity-check` to choose from Action
-Needed. A named company or referenced email is the normal direct path; the label
+email about the AI voice screening`, or `$opportunity-check` to choose from recent
+conversations. A named company or referenced email is the normal direct path; the
 picker is only the fallback when neither is supplied.
 
 ## Establish the request and application history
 
 Read the full selected conversation, including the workspace owner's replies and later messages.
 Identify what is being requested now, explicit deadlines, stated effort, and
-evidence of completion, cancellation, or rejection. An old labeled message does
+evidence of completion, cancellation, or rejection. An old message does
 not prove an action is still outstanding. Distinguish confirmed completion from
 an intention to complete it. Explain contradictions with tracker status rather
 than silently choosing one. Flag expired deadlines; do not declare an undated
@@ -197,13 +194,13 @@ submit applications, book meetings, or start assessments. Do not update tracker
 rows, saved reviews, resumes, or `records/inbox-last-check`. Save reports through the controlled opportunity CLI below.
 Use Gmail reads that preserve read state; avoid explicit mark-as-read operations.
 An **all** selection authorizes research only, never external actions. Leave
-inbox-check's label maintenance and timestamp workflow untouched.
+inbox-check's checkpoint workflow untouched.
 
 ## Selection history, batches, and report persistence (current contract)
 
 No subagents.
 
-Support several companies, today (New York incoming activity date), since last time, and all. Resolve from shared mail discoveries (`scripts/apps.sh mail list --json`), actions, applications, saved reports (`scripts/apps.sh opportunities list --json`), and fresh relevant Gmail. All covers the complete actionable selection including older items, with every page; do not truncate silently. Distinguish outstanding requests from completed/canceled mail retaining its label. Keep distinct roles separate.
+Support several companies, today (New York incoming activity date), since last time, and all. Resolve from shared mail discoveries (`scripts/apps.sh mail list --json`), actions, applications, saved reports (`scripts/apps.sh opportunities list --json`), and fresh relevant Gmail. All covers the complete actionable selection including older items, with every page; do not truncate silently. Distinguish outstanding requests from completed/canceled ones. Keep distinct roles separate.
 
 For since last time compare stable opportunity identity, substantive source fingerprint, requested depth, and successful saved reports. Fingerprint reflects request/role/pay/arrangement changes, not reminder timestamps. Incomplete reports remain retryable. Triage does not satisfy explicit full research. Explicit older rechecks always run.
 

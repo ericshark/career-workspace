@@ -103,13 +103,13 @@ export function ApplicationFlow({
                 title={`${item.label}: ${counts[item.key]}`}
               >
                 <span className="font-mono text-base leading-5 font-semibold tabular-nums">
-                  {percent(counts[item.key], total)}
+                  {counts[item.key]}
                 </span>
                 <span className="text-xs text-muted-foreground">
                   {item.label}
                 </span>
                 <span className="font-mono text-xs tabular-nums">
-                  {counts[item.key]}
+                  {percent(counts[item.key], total)}
                 </span>
               </p>
             ))}
@@ -126,7 +126,7 @@ export function ApplicationFlow({
             <div className="mb-1.5 flex justify-between text-xs">
               <span>{o.label}</span>
               <span>
-                {counts[o.key]} · {percent(counts[o.key], total)}
+                {percent(counts[o.key], total)} · {counts[o.key]}
               </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-muted">

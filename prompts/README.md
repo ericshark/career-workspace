@@ -19,7 +19,7 @@ Edit the files here to change what the UI's model calls are told. The server rea
 | JSON response contracts                | [schemas.ts](../ui/src/lib/claude/schemas.ts), [jobBrief.ts](../ui/src/lib/jobBrief.ts) |
 | SDK settings and metrics               | [agent.ts](../ui/src/lib/claude/agent.ts)                                               |
 
-**Template rules:** quick-add.md has `## System prompt` and `## User prompt` sections (headings aren't sent; keep them). Code fills `{{jobCount}}`, `{{plural}}` and `{{unknownCompany}}` once, then appends job data; pasted content is never treated as a template. review-job.md keeps its system rules above `## Job brief`, whose text goes into the user prompt. workshop-tasks.md has `## System prompt`, `## Use my list` and `## Plan it` sections; the chosen mode's section is prepended to the project, existing tasks and note, which are sent as data. Other files are sent whole as the system prompt. Editing Markdown can't add evidence the input code doesn't supply.
+**Template rules:** quick-add.md has `## System prompt` and `## User prompt` sections (headings aren't sent; keep them). Code fills `{{jobCount}}`, `{{plural}}` and `{{unknownCompany}}` once, then appends job data; pasted content is never treated as a template. review-job.md keeps its system rules above `## Job brief`, whose text goes into the user prompt. workshop-tasks.md has `## System prompt`, `## Use my list` (Tidy tasks in the UI) and `## Plan it` (Expand) sections; the chosen mode's section is prepended to the project, existing tasks and note, which are sent as data. Other files are sent whole as the system prompt. Editing Markdown can't add evidence the input code doesn't supply.
 
 ## Career record coverage
 
@@ -34,9 +34,9 @@ Review, review follow-ups, application answers, and cover letters retain Profess
 | Cover letter | `gpt-6.1-terra`     | One, plus at most one retry | 3         | Route maxDuration 180 s                    |
 | Follow-up    | `gpt-6.1-terra`     | One per question            | 3         | Route maxDuration 120 s                    |
 | Review       | `gpt-6.1-terra`     | One per job                 | 6         | 120 s abort timer; route maxDuration 180 s |
+| Tailor | `gpt-6.1-terra` | One agent query | 20 | 6-minute abort timer; at most 3 candidate submissions |
 
 Quick Add uses the selected provider's fast model: `gpt-6-luna` on the default ChatGPT provider, `claude-haiku-5-5` on Claude.
-| Tailor | `gpt-6.1-terra` | One agent query | 20 | 6-minute abort timer; at most 3 candidate submissions |
 
 Review, Tailor, and Extras (questions + letter; also used for review follow-ups) each have a model setting in the UI; Haiku is selectable. Quick Add always uses the selected provider's fast model (Haiku or Luna). ChatGPT offers Sol, Terra, and Luna; workspace preferences remember each provider's operation models independently, with Terra selected initially and the same task prompts and guards; see [ChatGPT provider](../ui/docs/02-claude-integration.md#chatgpt-provider).
 

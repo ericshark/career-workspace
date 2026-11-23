@@ -1,14 +1,13 @@
 {
   "name": "career-ui",
   "version": "1.0.0",
-  "description": "A local web app for this workspace. It makes applying feel fast and visible: paste a job post, get the `/apply` fit score, tailor and build the resume in one click, log the application, and watch today's count go up.",
+  "description": "Local web app for your job search: review jobs, tailor resumes, log applications, and track recruiting and projects.",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "test": "vitest run",
-    "spike": "tsx spike/score.ts",
     "dev": "node scripts/serve.mjs dev",
     "build": "next build",
     "start": "node scripts/serve.mjs start",

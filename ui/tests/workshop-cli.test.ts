@@ -134,34 +134,39 @@ it(
   },
 );
 
-it(
-  "adds a project with repo links and rejects them on ideas",
-  { timeout: 60000 },
-  () => {
-    const project = cli(
-      "add",
-      "--kind",
-      "project",
-      "--title",
-      "Issue Pilot",
-      "--local",
-      "~/GitHub/issue-pilot",
-    );
-    expect(project.code).toBe(0);
-    expect(snapshot().items[0]).toMatchObject({
-      kind: "project",
-      status: "Active",
-      localFolder: "~/GitHub/issue-pilot",
-    });
-    expect(
-      cli("add", "--kind", "project", "--title", "Z", "--priority", "High")
-        .code,
-    ).toBe(1);
-    expect(
-      cli("add", "--kind", "idea", "--title", "Y", "--local", "/x").code,
-    ).toBe(1);
-  },
-);
+it("adds projects and ideas with repo links", { timeout: 60000 }, () => {
+  const project = cli(
+    "add",
+    "--kind",
+    "project",
+    "--title",
+    "Orchard Notes",
+    "--local",
+    "~/GitHub/orchard-notes",
+  );
+  expect(project.code).toBe(0);
+  expect(snapshot().items[0]).toMatchObject({
+    kind: "project",
+    status: "Active",
+    localFolder: "~/GitHub/orchard-notes",
+  });
+  expect(
+    cli("add", "--kind", "project", "--title", "Z", "--priority", "High").code,
+  ).toBe(1);
+  expect(
+    cli("add", "--kind", "idea", "--title", "Y", "--local", "/x").code,
+  ).toBe(0);
+  expect(
+    cli("update", "Y", "--github", "https://github.com/example/y").code,
+  ).toBe(0);
+  expect(
+    snapshot().items.find((i: { title: string }) => i.title === "Y"),
+  ).toMatchObject({
+    kind: "idea",
+    localFolder: "/x",
+    githubUrl: "https://github.com/example/y",
+  });
+});
 
 it(
   "promotes an idea keeping docs and tasks, and updates docs without overwriting silently",

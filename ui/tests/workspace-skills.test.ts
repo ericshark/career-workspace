@@ -53,4 +53,29 @@ describe("shared career skills", () => {
       }
     }
   });
+  it("keeps Gmail read-only and independent of personal labels", () => {
+    const names = [
+      "inbox-check",
+      "actions-check",
+      "career-check",
+      "opportunity-check",
+    ];
+    for (const name of names) {
+      const dir = path.join(canonical, name);
+      for (const file of fs.readdirSync(dir, { recursive: true }) as string[]) {
+        if (!/\.(md|yaml)$/.test(file)) continue;
+        expect(
+          fs.readFileSync(path.join(dir, file), "utf8"),
+          `${name}/${file}`,
+        ).not.toMatch(
+          /Job Confirmations|Applications Closed|Action Needed|STARRED|removing (INBOX|SPAM)/,
+        );
+      }
+    }
+    for (const name of ["inbox-check", "actions-check", "career-check"])
+      expect(
+        fs.readFileSync(path.join(canonical, name, "SKILL.md"), "utf8"),
+        name,
+      ).toMatch(/Gmail is read-only/);
+  });
 });

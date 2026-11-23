@@ -374,7 +374,7 @@ export default function WorkshopPage() {
                       {label}
                       <span
                         aria-hidden="true"
-                        className="inline-grid h-5 min-w-5 place-items-center rounded-full bg-foreground/10 px-1.5 text-xs leading-none font-semibold tabular-nums"
+                        className="text-xs leading-none font-semibold tabular-nums"
                       >
                         {counts[value]}
                       </span>

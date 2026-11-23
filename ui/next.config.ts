@@ -6,6 +6,8 @@ const config: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   // Keep the Claude Agent SDK native binaries out of the bundler.
   serverExternalPackages: ["@anthropic-ai/claude-agent-sdk"],
+  // Keep `next dev` from adding its own AGENTS.md to the checkout.
+  agentRules: false,
   // Hide the floating "N" dev badge; compile/runtime errors still show as overlays.
   devIndicators: false,
   async redirects() {

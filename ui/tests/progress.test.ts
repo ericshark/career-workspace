@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { computeProgress, mondayToSunday } from "@/lib/progress";
+import {
+  computeAverages,
+  computeProgress,
+  mondayToSunday,
+} from "@/lib/progress";
 import type { ApplicationRow } from "@/lib/types";
 
 let counter = 0;
@@ -223,6 +227,38 @@ describe("streak", () => {
     ];
     expect(computeProgress(rows, "2026-10-06", WEEK).byDay).toEqual({
       "2026-10-05": 3,
+    });
+  });
+});
+
+describe("computeAverages", () => {
+  // Fri 2026-10-02 .. Mon 2026-10-05 completed; today is Tue 2026-10-06.
+  const byDay = { "2026-10-02": 10, "2026-10-03": 4, "2026-10-05": 6 };
+
+  it("averages completed days only, from the first application through yesterday", () => {
+    const a = computeAverages(byDay, "2026-10-06");
+    // 20 applications; 4 calendar days; 2 weekdays (Fri, Mon); 3 active days.
+    expect(a.perCalendarDay).toBe(5);
+    expect(a.elapsedDays).toBe(4);
+    expect(a.perWeekday).toBe(10);
+    expect(a.perActiveDay).toBeCloseTo(20 / 3);
+  });
+
+  it("ignores today until the day is over, then rolls it in", () => {
+    const withToday = { ...byDay, "2026-10-06": 40 };
+    expect(computeAverages(withToday, "2026-10-06")).toEqual(
+      computeAverages(byDay, "2026-10-06"),
+    );
+    expect(computeAverages(withToday, "2026-10-07").perCalendarDay).toBe(12);
+  });
+
+  it("is null before any day has completed", () => {
+    expect(computeAverages({}, "2026-10-06").perWeekday).toBeNull();
+    expect(computeAverages({ "2026-10-06": 3 }, "2026-10-06")).toEqual({
+      perWeekday: null,
+      perActiveDay: null,
+      perCalendarDay: null,
+      elapsedDays: null,
     });
   });
 });

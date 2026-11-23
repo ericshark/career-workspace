@@ -202,12 +202,15 @@ using the PDFs. A tailored resume must pass the one-page and ATS checks.
 
 The app has manual recruiting actions. To run mail-assisted checks, open this
 checkout in a desktop agent that can use the bundled skills, execute local
-scripts, and access a Gmail connector. Connect your own Gmail account and
-create **Job Confirmations**, **Applications Closed**, and **Action Needed**
-labels. Start with **Career Check Dry Run** and verify the account and proposed
-changes. **Career Check** can organize recruiting mail and update local records.
-**Actions Check** can synchronize tasks and **Opportunity Check** can research
-a selected recruiter message. These are on-demand desktop workflows.
+scripts, and access a Gmail connector. Connect your own Gmail account, with
+read-only access where your connector offers it. You don't need any labels or
+filters.
+
+The checks **only read Gmail**. The skills forbid labeling, starring, archiving,
+moving, deleting or sending mail. Start with **Career Check Dry Run**, which
+saves nothing, and review the proposed changes. **Career Check** then updates
+your local tracker, recruiting history and Actions. **Opportunity Check**
+researches a selected recruiter message. Everything runs on demand.
 
 ## Local data and backups
 

@@ -1,6 +1,6 @@
 # Request identity, deadline and evidence safeguards
 
-This reference supports Actions Check only. Inbox Check owns Gmail labels and application statuses (Actions Check's one exception is closing same-role duplicate rows); neither reconciliation nor discovery writes new Tracker Next text.
+This reference supports Actions Check only. Inbox Check owns application statuses (Actions Check's one exception is closing same-role duplicate rows); neither reconciliation nor discovery writes new Tracker Next text.
 
 ## Match the specific ask
 
@@ -34,7 +34,7 @@ A completion suggestion requires evidence that satisfies the whole ask:
 
 Use stable evidence-message-plus-ask identities and verified evidence timestamps. Dismissed suggestions must stay dismissed across repeat imports. Clear a stale suggestion with explicit null only when verified evidence invalidates it. The user confirms completion in Actions; never retire as a shortcut.
 
-Only explicit withdrawal, superseding content or confirmed application closure permits retirement. Include the evidence message ID. Do not infer resolution from elapsed deadlines, expiration, silence, a missing label/search result or In Progress status. Completed tasks remain completed.
+Only explicit withdrawal, superseding content or confirmed application closure permits retirement. Include the evidence message ID. Do not infer resolution from elapsed deadlines, expiration, silence, a missing search result or In Progress status. Completed tasks remain completed.
 
 ## Preserve deadline meaning and precision
 

@@ -38,7 +38,3 @@ Output ends with **PASS**, **PASS (with warnings)**, or **FAIL**. Exit code 0 = 
 2. Fix the `.tex` (never the PDF): usually a stray macro, a special character, an unescaped `%`/`&`, or a layout change that reorders the text stream.
 3. Rebuild with `scripts/build.sh`, which re-runs the check. Report the final verdict to the workspace owner.
 4. If the check itself looks wrong (a false failure), say so and show the evidence. Don't weaken the check silently.
-
-## Known warning
-
-`∼` (from `$\sim$30\%`) is flagged on all masters. Most ATS read it fine. Plain `~30%` or "about 30%" would clear it, but that's a wording change to the masters, so ask the workspace owner first.

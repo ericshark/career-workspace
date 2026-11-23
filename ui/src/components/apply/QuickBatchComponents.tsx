@@ -26,22 +26,6 @@ import { Spinner } from "@/components/ui/spinner";
 import type { QuickBatchListItem } from "@/lib/quickState";
 import { cn } from "@/lib/utils";
 
-function hasBatchDuplicates(batch: QuickBatchListItem): boolean {
-  return batch.added.some(
-    (a) =>
-      a.duplicates &&
-      (a.duplicates.exact.length > 0 || a.duplicates.possible.length > 0),
-  );
-}
-
-function duplicateCount(batch: QuickBatchListItem): number {
-  return batch.added.filter(
-    (a) =>
-      a.duplicates &&
-      (a.duplicates.exact.length > 0 || a.duplicates.possible.length > 0),
-  ).length;
-}
-
 function canUndoBatch(batch: QuickBatchListItem, now: number): boolean {
   return (
     !batch.undone &&
@@ -250,14 +234,7 @@ export function QuickTopStatusBar({
       })}
 
       {latestDone && (
-        <div
-          className={cn(
-            "overflow-hidden rounded-xl border shadow-xs transition-colors",
-            hasBatchDuplicates(latestDone)
-              ? "border-warning/50 bg-warning/5"
-              : "bg-card",
-          )}
-        >
+        <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
           <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
             <button
               type="button"
@@ -265,22 +242,12 @@ export function QuickTopStatusBar({
               aria-expanded={expandedIds.has(latestDone.batchId)}
               className="flex min-w-0 flex-1 items-center gap-2 text-left text-sm font-medium"
             >
-              {hasBatchDuplicates(latestDone) ? (
-                <TriangleAlertIcon className="size-4 shrink-0 text-warning" />
-              ) : (
-                <CheckCircle2Icon className="size-4 shrink-0 text-success" />
-              )}
+              <CheckCircle2Icon className="size-4 shrink-0 text-success" />
               <span>
                 {latestDone.undone
                   ? `Undone ${latestDone.added.length} job${latestDone.added.length === 1 ? "" : "s"}`
                   : `Added ${latestDone.added.length} job${latestDone.added.length === 1 ? "" : "s"}${latestDone.skipped.length ? ` · ${latestDone.skipped.length} skipped` : ""}`}
               </span>
-              {hasBatchDuplicates(latestDone) && (
-                <span className="rounded-md bg-warning/15 px-1.5 py-0.5 text-[11px] font-medium text-warning">
-                  {duplicateCount(latestDone)} possible duplicate
-                  {duplicateCount(latestDone) === 1 ? "" : "s"}
-                </span>
-              )}
               <ChevronDownIcon
                 className={cn(
                   "size-3.5 text-muted-foreground transition-transform",
@@ -467,9 +434,6 @@ export function QuickBellPopover({
       (b.status === "error" || b.status === "interrupted") &&
       (b.viewedAt === null || !b.dismissedFromTop),
   );
-  const hasDuplicate = recent.some(
-    (b) => b.viewedAt === null && hasBatchDuplicates(b),
-  );
   const badgeCount = unviewed.length || (hasError ? 1 : 0) || missingCount;
 
   const toggleBatch = (batchId: string) =>
@@ -507,17 +471,13 @@ export function QuickBellPopover({
             "relative",
             (hasError || missingCount > 0) &&
               "border-destructive/50 text-destructive",
-            !hasError &&
-              !missingCount &&
-              hasDuplicate &&
-              "border-warning/60 text-warning",
           )}
         >
           {running ? (
             <Spinner className="size-4" aria-hidden />
           ) : missingCount > 0 ? (
             <CircleAlertIcon className="size-4" />
-          ) : hasError || hasDuplicate ? (
+          ) : hasError ? (
             <TriangleAlertIcon className="size-4" />
           ) : (
             <BellIcon className="size-4" />
@@ -529,9 +489,7 @@ export function QuickBellPopover({
                 "absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold text-white",
                 hasError || missingCount > 0
                   ? "bg-destructive"
-                  : hasDuplicate
-                    ? "bg-warning text-black"
-                    : "bg-primary text-primary-foreground",
+                  : "bg-primary text-primary-foreground",
               )}
             >
               {badgeCount}
@@ -561,12 +519,9 @@ export function QuickBellPopover({
               const expanded = expandedIds.has(batch.batchId);
               const jobs = batch.undone ? [] : batch.added;
               const singleJob = batch.totalCount === 1 ? jobs[0] : undefined;
-              const dupes = duplicateCount(batch);
               const issues = [
                 batch.error,
                 batch.skipped.length > 0 && `${batch.skipped.length} skipped`,
-                dupes > 0 &&
-                  `${dupes} possible duplicate${dupes === 1 ? "" : "s"}`,
               ].filter(Boolean);
               const openJob = (job: QuickBatchListItem["added"][number]) => {
                 setOpen(false);

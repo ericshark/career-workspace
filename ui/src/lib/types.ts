@@ -144,6 +144,21 @@ export interface Progress {
   /** Submitted applications ever (any lane, status ≠ `to apply`). */
   allTime: number;
   rejected: number;
+  /**
+   * Rolling averages over completed days (first application through yesterday), so
+   * they stay steady all day and update on their own as days pass. `null` until
+   * there is at least one completed day.
+   */
+  averages: {
+    /** Submitted applications ÷ weekdays elapsed. */
+    perWeekday: number | null;
+    /** Submitted applications ÷ days with at least one application. */
+    perActiveDay: number | null;
+    /** Submitted applications ÷ calendar days elapsed. */
+    perCalendarDay: number | null;
+    /** Calendar days from the first application through yesterday (for weekly rates). */
+    elapsedDays: number | null;
+  };
   /** Deprecated compatibility field; daily planning has been removed. */
   plan: null;
 }

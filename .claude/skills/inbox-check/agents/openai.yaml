@@ -1,4 +1,4 @@
 interface:
   display_name: "Inbox Check"
-  short_description: "Organize recruiting mail and hand off verified requests"
-  default_prompt: "Use $inbox-check to organize my recruiting email, synchronize application statuses, and save discoveries for Actions Check."
+  short_description: "Read recruiting mail and hand off verified requests"
+  default_prompt: "Use $inbox-check to read my recruiting email, update local application statuses, and save discoveries for Actions Check."

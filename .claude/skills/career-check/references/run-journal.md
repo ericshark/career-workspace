@@ -20,8 +20,7 @@ renews, publishes, finishes, or fails a journal attempt.
    so the workspace owner knows later mail will be covered by the next fresh Daily.
 3. The lease expires 15 minutes after the last renewal. Call
    `mail heartbeat --input FILE` with `{leaseId}` at least every five minutes
-   during long discovery and immediately before each Gmail mutation batch or
-   mutation retry. Local guarded CLI writes renew the lease too. If renewal fails,
+   during long discovery. Local guarded CLI writes renew the lease too. If renewal fails,
    stop writes and report the interruption. There is no background heartbeat.
 4. Include `leaseId` on all Inbox `mail sync` batches. Supply
    `--lease LEASE_ID` to check-owned `status`, `actions sync`,

@@ -1,10 +1,9 @@
 # Recruiting evidence and where it appears
 
-Inbox Check applies Gmail labels and stars, records tracker changes and hands off
-verified evidence. Actions Check owns request reconciliation and publication of
+Inbox Check reads Gmail, records tracker changes and hands off verified evidence. Actions Check owns request reconciliation and publication of
 recruiting updates. Career Check owns the run and report. Inbox may publish a
 verified rejection before its guarded tracker write to preserve closure evidence.
-Gmail's Action Needed label can include a confirmation that requires no task.
+A message that looks actionable can be a confirmation that requires no task.
 
 | Evidence                                                                                                                     | Action                                                                                                                                                | Recruiting update                                   |
 | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
