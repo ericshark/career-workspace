@@ -14,3 +14,12 @@ export async function submitAndOpenReview(page: Page) {
   ).toBeVisible();
   return runId as string;
 }
+
+/** History opens on Summaries; reviews still waiting for a decision are listed under To apply. */
+export async function showUndecidedHistory(page: Page) {
+  await page
+    .getByRole("group", { name: "History filter" })
+    .filter({ visible: true })
+    .getByRole("button", { name: /^To apply/ })
+    .click();
+}

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { test, expect } from "@playwright/test";
+import { showUndecidedHistory } from "./reviewHelpers";
 import { fixtureScore } from "../../src/lib/claude/fixtures";
 
 test("Quick Add retries a partial save without adding a second row", async ({
@@ -24,23 +25,18 @@ test("Quick Add retries a partial save without adding a second row", async ({
       .getByRole("button", { name: /Quick add/i })
       .last()
       .click();
-    await expect(
-      page.getByRole("heading", { name: "Save incomplete", exact: true }),
-    ).toBeVisible();
-    await expect(
-      page.getByText(/A tracker row may already exist/),
-    ).toBeVisible();
+    const failed = page
+      .getByRole("alert")
+      .filter({ hasText: "Quick Add failed (0/1 added)" });
+    await expect(failed).toBeVisible();
     fs.rmdirSync(blocked);
+    // The failed batch survives a refresh and can be retried from its banner.
     await page.reload();
-    await expect(
-      page.getByLabel("Job 1 description", { exact: true }),
-    ).toHaveValue(/Browser Recovery/);
-    await page
-      .getByRole("button", { name: /Quick add/i })
-      .last()
+    await failed
+      .getByRole("button", { name: "Retry remaining (1)", exact: true })
       .click();
     await expect(
-      page.getByRole("heading", { name: "Added 1 job", exact: true }),
+      page.getByRole("button", { name: /Added 1 job/ }),
     ).toBeVisible();
     const rows = (await (await request.get("/api/applications")).json()).rows;
     expect(
@@ -85,6 +81,7 @@ test("a cache-only review stays in History and can retry permanent saving", asyn
   fs.mkdirSync(blocked, { recursive: true });
   try {
     await page.goto("/apply");
+    await showUndecidedHistory(page);
     await page
       .getByRole("button", { name: /Save Failure Browser/ })
       .first()

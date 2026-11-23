@@ -13,7 +13,8 @@ test("activity expansion, scheduled timeline navigation and visible matching pic
     data: { fileHash: apps.fileHash, key: row.key, status: "applied" },
   });
   const now = new Date().toISOString();
-  const scheduledAt = `${localDate()}T17:00:00.000Z`;
+  // Tomorrow, so the server's real clock and the page's fake clock both see it as ahead.
+  const scheduledAt = `${localDate(new Date(), 1)}T17:00:00.000Z`;
   const beforeInterview = new Date(Date.parse(scheduledAt) - 60_000);
   await page.clock.install({
     time: new Date(beforeInterview.getTime() - 60_000),
@@ -30,14 +31,14 @@ test("activity expansion, scheduled timeline navigation and visible matching pic
       version: 1,
       importedNext: true,
       actions: [
-        ...[2, 1].map((days) => ({
+        ...[3, 2].map((days) => ({
           id:
-            days === 1
+            days === 2
               ? "33333333-3333-4333-8333-333333333333"
               : "44444444-4444-4444-8444-444444444444",
           externalKeys: [`gmail:deadline:${days}`],
           revision: 1,
-          text: days === 1 ? "Send documents" : "Finish assessment",
+          text: days === 2 ? "Send documents" : "Finish assessment",
           company: row.company,
           role: row.role,
           application: { rowKey: row.key },
@@ -79,6 +80,9 @@ test("activity expansion, scheduled timeline navigation and visible matching pic
           notify: true,
           seen: false,
           scheduledAt,
+          scheduledEndAt: new Date(
+            Date.parse(scheduledAt) + 60 * 60_000,
+          ).toISOString(),
           responseExpected: false,
         },
         {
@@ -137,7 +141,7 @@ test("activity expansion, scheduled timeline navigation and visible matching pic
       deadlineList
         .getByRole("link", { name: /Send documents/ })
         .locator("time"),
-    ).toHaveAttribute("datetime", dateAfter(1));
+    ).toHaveAttribute("datetime", dateAfter(2));
     await page.screenshot({
       path: info.outputPath(`deadline-list-${width}.png`),
       fullPage: true,

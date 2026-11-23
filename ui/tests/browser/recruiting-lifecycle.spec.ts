@@ -213,11 +213,8 @@ test("connected updates, grouped history, matching, research and closure across 
   await expect(
     page.getByText("Technical assessment", { exact: true }),
   ).toHaveCount(0);
+  // Closed never hides history, even for a job hidden in Completed.
   await page.getByRole("button", { name: /^Closed(?: \d+)?$/ }).click();
-  await page
-    .locator("summary")
-    .filter({ hasText: /^View hidden \(1\)$/ })
-    .click();
   await expect(page.getByText("2 completed", { exact: true })).toBeVisible();
   await page
     .getByRole("button", { name: "Timeline", exact: true })
@@ -475,7 +472,7 @@ test("Actions shows one card per request and lets users dismiss mail-only review
   await expect(review).toHaveCount(0);
   await matching.getByRole("button", { name: "Dismiss request" }).click();
   await expect(matching).toHaveCount(0);
-  await page.goto("/actions");
+  await page.goto("/actions?filter=all");
   await expect(
     page.getByText("You're all caught up!", { exact: true }),
   ).toBeVisible();

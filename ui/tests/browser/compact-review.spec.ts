@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { test, expect } from "@playwright/test";
+import { showUndecidedHistory } from "./reviewHelpers";
 import { fixtureScore } from "../../src/lib/claude/fixtures";
 import type { ReviewJobStatus } from "../../src/lib/types";
 
@@ -179,6 +180,7 @@ test("History filters, New to Viewed, legacy defaults and cross-browser persiste
     /In progress/,
   ]);
   await expect(page.getByLabel("Search history")).toHaveCount(0);
+  await filters.getByRole("button", { name: /^To apply/ }).click();
   const freshButton = page.getByRole("button", { name: /History New/ });
   await expect(freshButton.getByText("New", { exact: true })).toBeVisible();
   await expect(
@@ -212,6 +214,7 @@ test("History filters, New to Viewed, legacy defaults and cross-browser persiste
   try {
     const second = await other.newPage();
     await second.goto(new URL("/apply", page.url()).href);
+    await showUndecidedHistory(second);
     await expect(
       second
         .getByRole("button", { name: /History New/ })

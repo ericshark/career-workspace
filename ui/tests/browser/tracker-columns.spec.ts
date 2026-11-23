@@ -56,9 +56,6 @@ test("tracker review, action and posting controls fit their columns", async ({
   for (const width of [1440, 1024, 390]) {
     await page.setViewportSize({ width, height: 950 });
     await page.goto("/tracker");
-    const timeline = page
-      .getByRole("button", { name: "View action timeline" })
-      .filter({ visible: true });
     const action =
       width >= 768
         ? page
@@ -67,7 +64,13 @@ test("tracker review, action and posting controls fit their columns", async ({
             .filter({ hasText: row.role })
             .getByRole("button", { name: "View action timeline" })
             .first()
-        : timeline.first();
+        : page
+            .locator("div.cursor-pointer")
+            .filter({ hasText: row.company })
+            .filter({ hasText: row.role })
+            .getByRole("button", { name: "View action timeline" })
+            .filter({ visible: true })
+            .first();
     const rowControls = action.locator("..");
     const review = rowControls.getByRole("button", {
       name: "View review",

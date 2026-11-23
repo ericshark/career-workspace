@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { test, expect } from "@playwright/test";
+import { showUndecidedHistory } from "./reviewHelpers";
 import { fixtureScore } from "../../src/lib/claude/fixtures";
 
 for (const viewport of [
@@ -62,6 +63,7 @@ for (const viewport of [
         await page
           .getByRole("button", { name: "History", exact: true })
           .click();
+      await showUndecidedHistory(page);
       await page
         .getByRole("button", { name: new RegExp(result.company) })
         .click();
@@ -299,6 +301,7 @@ test("leaving a review invalidates a delayed Skip response", async ({
     await route.fulfill({ json: { ok: true } });
   });
   await page.goto("/apply");
+  await showUndecidedHistory(page);
   await page.getByRole("button", { name: new RegExp(companies[0]) }).click();
   const review = page.getByLabel("Completed review", { exact: true });
   await review.getByRole("button", { name: "Skip", exact: true }).click();

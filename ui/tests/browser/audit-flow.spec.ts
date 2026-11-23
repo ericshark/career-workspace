@@ -95,7 +95,8 @@ test("Open lists only ready tasks; decisions live in their own labeled tab", asy
   );
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/actions");
+    // Decisions is the landing tab while anything needs one, so ask for Open.
+    await page.goto("/actions?filter=all");
     // Open shows the ready-to-do task and no decision block.
     await expect(
       page.getByText("Take the online assessment", { exact: true }),

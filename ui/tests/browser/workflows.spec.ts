@@ -555,8 +555,9 @@ test("Quick add caps the batch at 50 cards and compresses pasted text", async ({
       );
     }, text);
   await paste("Initech — Engineer\r\n\r\n   \nAbout us\n\n\nBuild   things");
+  // Short fragment lines fold onto the line before.
   await expect(description).toHaveValue(
-    "Initech — Engineer\nAbout us\nBuild things",
+    "Initech — Engineer About us Build things",
   );
   // A lone URL pasted into the description fills the empty URL box instead.
   await paste("https://jobs.example.test/initech/1");

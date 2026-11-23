@@ -110,7 +110,7 @@ test("redesigned recruiting views preserve interactions across viewports", async
       path: info.outputPath(`dashboard-${width}.png`),
       fullPage: true,
     });
-    await page.goto("/actions");
+    await page.goto("/actions?filter=all");
     await expect(
       page.getByRole("heading", {
         name: "Complete technical assessment",
@@ -222,7 +222,7 @@ test("redesigned recruiting views preserve interactions across viewports", async
     .click();
   await page.getByRole("button", { name: /Confirm completion:/ }).click();
   await expect(page.locator(`#action-${make(1).id}`)).toHaveCount(0);
-  await page.goto("/actions");
+  await page.goto("/actions?filter=all");
   await page.getByRole("button", { name: "Dismiss", exact: true }).click();
   await page.getByRole("button", { name: /Confirm dismissal:/ }).click();
   await expect(
