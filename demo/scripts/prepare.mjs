@@ -1,5 +1,6 @@
 // Copies the app's real screens and API code from ../ui/src into generated/ (Git-ignored), applies
 // the few demo overrides, and extracts the install guide from the public README.
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,28 +57,41 @@ const section = (title) => {
     .replace(/\]\(#/g, "](https://github.com/ericshark/career-workspace#");
 };
 const quick = section("Quick start");
-const fence = /```sh\n([\s\S]*?)```/.exec(quick);
+const part = (title) => {
+  const match = new RegExp(
+    `^### ${title}\\n([\\s\\S]*?)(?=^### |$(?![\\s\\S]))`,
+    "m",
+  ).exec(quick);
+  if (!match) throw new Error(`Quick start in README.md needs "### ${title}"`);
+  return match[1].trim();
+};
+const intro = quick.split(/^### /m)[0];
+const fence = /```sh\n([\s\S]*?)```/.exec(intro);
 if (!fence) throw new Error("Quick start in README.md needs an sh code block");
-const firstJob = /^(2\. [\s\S]*?)(?=^3\. )/m.exec(
-  section("Try a job from start to finish"),
-);
-if (!firstJob)
-  throw new Error("README.md needs step 2 (log a job) under Try a job");
+section("Manual setup");
 fs.writeFileSync(
   path.join(out, "guide.json"),
   JSON.stringify({
-    prerequisites: quick.slice(0, fence.index).trim(),
+    need: intro.slice(0, fence.index).trim(),
     commands: fence[1].trim().split("\n"),
-    after: quick.slice(fence.index + fence[0].length).trim(),
-    profile: section("Add your profile and resume"),
-    tools: section("Resume tools"),
-    gmail: section("Optional Gmail checks"),
-    backups: section("Local data and backups"),
-    help: section("Troubleshooting"),
-    ai: section("Connect AI"),
-    firstJob: firstJob[1].replace(/^2\. /, "").replace(/^ {3}/gm, "").trim(),
+    after: intro.slice(fence.index + fence[0].length).trim(),
+    does: part("What setup does"),
+    uses: part("What it uses"),
+    finish: part("Finish up"),
   }),
 );
+
+// Publish the setup command with the site, so one npx command installs it.
+const publicDir = path.join(demo, "public");
+fs.mkdirSync(publicDir, { recursive: true });
+const packed = JSON.parse(
+  execFileSync("npm", ["pack", "--json", "--pack-destination", out], {
+    cwd: path.join(repo, "cli"),
+    encoding: "utf8",
+  }),
+);
+const [{ filename }] = Array.isArray(packed) ? packed : Object.values(packed);
+fs.copyFileSync(path.join(out, filename), path.join(publicDir, "cli.tgz"));
 
 // The demo must use the same versions as the app it shows.
 const read = (p) => JSON.parse(fs.readFileSync(path.join(repo, p), "utf8"));

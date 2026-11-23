@@ -43,6 +43,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - run: node --test cli/*.test.mjs
       - run: npm ci
         working-directory: demo
       - run: npm run build

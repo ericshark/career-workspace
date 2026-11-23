@@ -3,7 +3,7 @@
   "framework": "nextjs",
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
-  "ignoreCommand": "git diff --quiet ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD -- . ../ui ../README.md ../prompts",
+  "ignoreCommand": "git diff --quiet ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD -- . ../ui ../cli ../README.md ../prompts",
   "redirects": [
     { "source": "/run-locally", "destination": "/setup", "permanent": true }
   ],

@@ -1,0 +1,29 @@
+{
+  "name": "create-career-workspace",
+  "version": "1.0.0",
+  "description": "Guided setup for Career Workspace, a local app for your job search.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-career-workspace": "index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "lib.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericshark/career-workspace.git",
+    "directory": "cli"
+  },
+  "homepage": "https://career-workspace-demo.vercel.app",
+  "keywords": [
+    "career",
+    "job-search",
+    "create"
+  ]
+}

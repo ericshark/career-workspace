@@ -202,7 +202,7 @@ try {
 
     await page.goto(`${base}/run-locally`);
     check(/\/setup$/.test(page.url()), `${name} old setup address redirects`);
-    check(await seen("./scripts/setup.sh"), `${name} setup shows commands`);
+    check(await seen(/^npx https/), `${name} setup shows commands`);
     await page
       .getByRole("button", { name: "Copy all commands" })
       .first()
@@ -211,19 +211,17 @@ try {
       .evaluate(() => navigator.clipboard.readText())
       .catch(() => "");
     check(
-      /^git clone [\s\S]*\.\/scripts\/setup\.sh\n\.\/scripts\/ui\.sh$/.test(
+      /^npx https:\/\/career-workspace-demo\.vercel\.app\/cli\.tgz$/.test(
         copied,
       ),
       `${name} commands copy`,
     );
     for (const label of [
-      "Install what you need",
-      "Download, set up and run",
-      "Add your profile and resume",
-      "Connect your AI (optional)",
-      "Option 3: ChatGPT plan",
-      "Connect your email (optional)",
-      "Log your first application",
+      "Check what you need",
+      "Run one command",
+      "What setup does",
+      "What it uses",
+      "Finish up",
       "Back to the demo",
       "View on GitHub",
     ])

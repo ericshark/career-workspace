@@ -11,6 +11,49 @@ No account or install needed.
 
 ## Quick start
 
+You need [Git](https://git-scm.com/downloads) and [Node.js 24 or newer](https://nodejs.org)
+on Linux, macOS, or Ubuntu in [WSL 2](https://learn.microsoft.com/windows/wsl/install) on Windows.
+
+```sh
+npx https://career-workspace-demo.vercel.app/cli.tgz
+```
+
+Answer **y** if npm asks to install `create-career-workspace`. The setup then asks
+a few questions. Press Enter to skip anything optional.
+
+### What setup does
+
+1. **Downloads and installs** the app into a folder you choose, with an empty workspace.
+2. **Adds your background.** Drag in a `.md`, `.txt` or `.pdf` file. A LaTeX resume is optional.
+3. **Connects AI.** Choose OpenAI, Claude or none, then API key or subscription, then a model.
+4. **Installs resume tools** if you want PDF resumes.
+5. **Starts the app** at `http://127.0.0.1:3001`, or the next free port.
+
+Run the same command again to continue where you stopped. Your files are kept.
+API keys stay in one private file on your computer.
+
+### What it uses
+
+| Tool | Why | Needed? |
+| --- | --- | --- |
+| Git, Node.js and npm | Download, install and run the app | Yes |
+| OpenAI or Claude | Job reviews, resume tailoring and answers | Optional |
+| Python, TeX and Poppler | Build resume PDFs | Optional |
+| Claude Code with a Gmail connector | Read-only recruiting email checks | Optional |
+
+### Finish up
+
+Setup can't do these for you:
+
+- **ChatGPT subscription:** in the app, open **Apply → Models → Continue with ChatGPT** and sign in.
+- **Your files:** read through `profile/career.md`, remove private details, and put your
+  resume in `source/tech/resume.tex`.
+- **Email checks:** in Claude, open **Settings → Connectors → Gmail** and sign in. Open the
+  app's folder in Claude Code and ask for **Career Check Dry Run**. It saves nothing.
+- **Next time:** start the app with `./scripts/ui.sh` from its folder. Stop it with **Ctrl+C**.
+
+## Manual setup
+
 Install Git and Node.js 24 or newer on Linux, macOS, or Ubuntu in Windows
 Subsystem for Linux (WSL 2). Run these commands inside the Linux distribution
 when using WSL. On Windows, clone under your Linux home directory for faster I/O.

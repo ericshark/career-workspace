@@ -78,7 +78,7 @@ export function Guide({ text }: { text: string }) {
           .map((line) => line.trim())}
       />
     ) : part.trim() ? (
-      <Markdown key={i} className="md-reading [&_a]:underline" externalOnly>
+      <Markdown key={i} className="md-reading [&_a]:underline!" externalOnly>
         {part.trim()}
       </Markdown>
     ) : null,
