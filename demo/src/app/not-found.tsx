@@ -11,7 +11,7 @@ export default function NotFound() {
       </p>
       <p className="flex justify-center gap-4 underline">
         <Link href="/">Back to the demo</Link>
-        <Link href="/run-locally">Run locally</Link>
+        <Link href="/setup">How to set it up</Link>
       </p>
     </div>
   );

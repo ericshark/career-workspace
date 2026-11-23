@@ -34,18 +34,42 @@ Docs work without an AI connection.
 
 ## Connect AI
 
-Open **Apply → Models**. Choose **OpenAI** or **Claude**.
+AI is optional. Pick one connection. You can change it later.
 
-| Connection | Setup | Usage |
-| --- | --- | --- |
-| OpenAI API key | Copy `ui/.env.example` to `ui/.env.local` and set `OPENAI_API_KEY`. Restart the app. Select **Use OpenAI API key** if a ChatGPT plan was active. | Your OpenAI API account |
-| Claude API key | Set `ANTHROPIC_API_KEY` in the same local file, restart, and select **Claude**. | Your Claude Console account |
-| ChatGPT plan | Select **OpenAI → Continue with ChatGPT**, authorize plan usage in your browser, and return to Apply. Reopen **Models** to see which connection is active. | Your eligible ChatGPT plan and its limits |
+### Option 1: OpenAI API key
 
-Create keys in the [OpenAI API platform](https://platform.openai.com/api-keys)
-or [Claude Console](https://platform.claude.com/settings/keys). Keep them in
-`ui/.env.local` and restart after changes. On shared systems run
-`chmod 600 ui/.env.local`. If access expires, reconnect. If a model is unavailable,
+Uses your OpenAI API account.
+
+1. Create a key in the [OpenAI API platform](https://platform.openai.com/api-keys).
+2. From the repository folder, create your private settings file:
+
+   ```sh
+   cp -n ui/.env.example ui/.env.local
+   chmod 600 ui/.env.local
+   ```
+
+3. Open `ui/.env.local` in an editor, set `OPENAI_API_KEY`, and save.
+4. Restart the app. Open **Apply → Models** and choose **OpenAI**. Select **Use OpenAI API key** if a ChatGPT plan was active.
+
+### Option 2: Claude API key
+
+Uses your Claude Console account.
+
+1. Create a key in the [Claude Console](https://platform.claude.com/settings/keys).
+2. Create `ui/.env.local` as in option 1 and set `ANTHROPIC_API_KEY`.
+3. Restart the app. Open **Apply → Models** and choose **Claude**.
+
+### Option 3: ChatGPT plan
+
+Uses your eligible ChatGPT plan and its limits. No key is needed.
+
+1. Open **Apply → Models** and choose **OpenAI → Continue with ChatGPT**.
+2. Authorize plan usage in your browser and return to Apply.
+3. Reopen **Models** to see which connection is active.
+
+### Keep it working
+
+Keep keys in `ui/.env.local` and restart after changes. If access expires, reconnect. If a model is unavailable,
 pick a model your account allows. The app never switches from plan usage to
 API billing automatically. You can review or revoke plan permissions from your
 ChatGPT settings. [Official ChatGPT sign-in guide](https://developers.openai.com/siwc/token-sharing-open-source)
@@ -203,17 +227,22 @@ using the PDFs. A tailored resume must pass the one-page and ATS checks.
 
 ## Optional Gmail checks
 
-The app has manual recruiting actions. To run mail-assisted checks, open this
-checkout in a desktop agent that can use the bundled skills, execute local
-scripts, and access a Gmail connector. Connect your own Gmail account, with
-read-only access where your connector offers it. You don't need any labels or
-filters.
+The app has manual recruiting actions, so email is optional. The app itself never
+signs in to Gmail. Mail checks run in a desktop agent, such as Claude Code in the
+Claude desktop app, that can use this repository's bundled skills, run local
+scripts, and reach a Gmail connector.
 
-The checks **only read Gmail**. The skills forbid labeling, starring, archiving,
-moving, deleting or sending mail. Start with **Career Check Dry Run**, which
-saves nothing, and review the proposed changes. **Career Check** then updates
-your local tracker, recruiting history and Actions. **Opportunity Check**
-researches a selected recruiter message. Everything runs on demand.
+1. Connect Gmail in your agent. In Claude, open **Settings → Connectors**, choose
+   **Gmail**, and sign in with the account that gets your recruiting mail. Choose
+   read-only access where your connector offers it.
+2. Open your `career-workspace` folder in the agent.
+3. Ask it to run **Career Check Dry Run**. It saves nothing. Review the proposed changes.
+4. Ask it to run **Career Check**. It updates your local tracker, recruiting history
+   and Actions.
+
+You don't need any labels or filters. The checks **only read Gmail**. The skills
+forbid labeling, starring, archiving, moving, deleting or sending mail.
+**Opportunity Check** researches a selected recruiter message. Everything runs on demand.
 
 ## Local data and backups
 

@@ -92,9 +92,10 @@ export function Tour({ children }: { children: React.ReactNode }) {
               Demo · fictional data
             </span>
             <Button asChild size="sm">
-              <Link href="/run-locally">
+              <Link href="/setup" aria-label="How to set it up">
                 <TerminalIcon className="max-sm:hidden" />
-                Run locally
+                <span className="sm:hidden">Set it up</span>
+                <span className="hidden sm:inline">How to set it up</span>
               </Link>
             </Button>
           </div>,

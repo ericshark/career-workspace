@@ -4,7 +4,7 @@ A static tour of Career Workspace with fictional data. It shows the real screens
 and runs the app's own API code in the browser on an in-memory workspace. Changes reset on reload.
 The local app does not use this folder.
 
-- `scripts/prepare.mjs` copies the screens and API code into `generated/` (Git-ignored), applies `overrides/`, and reads the Run locally steps from the repository README.
+- `scripts/prepare.mjs` copies the screens and API code into `generated/` (Git-ignored), applies `overrides/`, and reads the setup steps from the repository README.
 - `src/demo/seed.ts` holds the sample workspace; `src/demo/examples.ts` holds the example posts and prepared results. No model is called.
 - `src/shims/` replaces Node modules.
 

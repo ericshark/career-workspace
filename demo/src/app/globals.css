@@ -2,7 +2,7 @@
 @source "../../generated/ui";
 @source "../";
 
-/* Phones have no room for the header's temporary "Reviewing" pill beside Run locally. */
+/* Phones have no room for the header's temporary "Reviewing" pill beside the setup link. */
 @media (max-width: 639px) {
   header.sticky a[href="/apply"] {
     display: none;

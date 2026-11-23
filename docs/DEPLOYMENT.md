@@ -10,7 +10,7 @@ The browser demo in `demo/` is live. The full app runs locally and is not deploy
 
 - Pushing `main` on `ericshark/career-workspace` deploys production. Other branches get previews.
 - Vercel uses `demo/` as its root directory and reads the rest of the repository at build time. `demo/vercel.json` sets the install, build, skip rule and security headers. Builds are skipped when `demo/`, `ui/`, `prompts/` and `README.md` are unchanged.
-- The build fails if a README section used by the Run locally page is missing, if shared package versions differ from `ui/`, or if the output contains private-looking data.
+- The build fails if a README section used by the How to set it up page is missing, if shared package versions differ from `ui/`, or if the output contains private-looking data.
 - Check status and logs in the Vercel project, or with `vercel inspect <url> --logs`. Roll back with `vercel rollback` or the dashboard. There are no migrations.
 
 ## Configuration

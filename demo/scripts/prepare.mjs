@@ -49,7 +49,7 @@ const section = (title) => {
   ).exec(readme);
   if (!match)
     throw new Error(
-      `README.md needs a "## ${title}" section for the Run locally page`,
+      `README.md needs a "## ${title}" section for the How to set it up page`,
     );
   return match[1]
     .trim()
@@ -70,6 +70,10 @@ fs.writeFileSync(
     commands: fence[1].trim().split("\n"),
     after: quick.slice(fence.index + fence[0].length).trim(),
     profile: section("Add your profile and resume"),
+    tools: section("Resume tools"),
+    gmail: section("Optional Gmail checks"),
+    backups: section("Local data and backups"),
+    help: section("Troubleshooting"),
     ai: section("Connect AI"),
     firstJob: firstJob[1].replace(/^2\. /, "").replace(/^ {3}/gm, "").trim(),
   }),

@@ -73,7 +73,7 @@ const localOnly = () =>
     {
       error: {
         code: "CLAUDE_UNAVAILABLE",
-        message: "Available in the local edition. See Run locally.",
+        message: "Available in the local edition. See How to set it up.",
       },
     },
     { status: 501 },

@@ -7,7 +7,10 @@ if (typeof window !== "undefined" && !(window as { __demo?: boolean }).__demo) {
   try {
     // Every visit starts from the sample workspace.
     for (const key of Object.keys(localStorage))
-      if (key.startsWith("career-ui.") || key.startsWith("workshop:"))
+      if (
+        (key.startsWith("career-ui.") && key !== "career-ui.theme") ||
+        key.startsWith("workshop:")
+      )
         localStorage.removeItem(key);
   } catch {
     /* storage may be blocked */

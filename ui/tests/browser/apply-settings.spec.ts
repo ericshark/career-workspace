@@ -58,14 +58,13 @@ test("settings, paste focus, blank-card submission and compact responsive histor
   await expect(
     page.getByRole("radio", { name: "Questions", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Settings", exact: true })
-    .first()
-    .click();
-  await page.getByLabel("Night mode").check();
+  const nightMode = page
+    .getByRole("button", { name: "Night mode", exact: true })
+    .filter({ visible: true });
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await nightMode.click();
   await expect(page.locator("html")).toHaveClass(/dark/);
-  await page.keyboard.press("Escape");
-  await expect(page.getByLabel("Night mode")).toHaveCount(0);
+  await expect(nightMode).toHaveAttribute("aria-pressed", "true");
   await page.screenshot({
     path: info.outputPath("desktop-dark.png"),
     fullPage: true,
@@ -104,12 +103,7 @@ test("settings, paste focus, blank-card submission and compact responsive histor
     0,
   );
   await modal.getByRole("button", { name: "Close", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Settings", exact: true })
-    .filter({ visible: true })
-    .click();
-  await page.getByLabel("Night mode").uncheck();
-  await page.keyboard.press("Escape");
+  await nightMode.click();
   await expect(page.locator("html")).not.toHaveClass(/dark/);
   await page.screenshot({
     path: info.outputPath("mobile-light.png"),

@@ -5,10 +5,12 @@ import path from "node:path";
 
 const demo = path.resolve(import.meta.dirname, "..");
 const out = path.join(demo, "out");
+const vercel = JSON.parse(
+  fs.readFileSync(path.join(demo, "vercel.json"), "utf8"),
+);
+const redirects = vercel.redirects;
 const headers = Object.fromEntries(
-  JSON.parse(
-    fs.readFileSync(path.join(demo, "vercel.json"), "utf8"),
-  ).headers[0].headers.map(({ key, value }) => [key, value]),
+  vercel.headers[0].headers.map(({ key, value }) => [key, value]),
 );
 const types = {
   ".html": "text/html",
@@ -23,6 +25,11 @@ const types = {
 export function serve(port) {
   const server = http.createServer((req, res) => {
     const name = decodeURIComponent(new URL(req.url, "http://x").pathname);
+    const redirect = redirects.find((r) => r.source === name);
+    if (redirect) {
+      res.writeHead(308, { location: redirect.destination });
+      return void res.end();
+    }
     const base = path.join(out, path.normalize(name));
     const file = [base, `${base}.html`, path.join(base, "index.html")].find(
       (f) => f.startsWith(out) && fs.existsSync(f) && fs.statSync(f).isFile(),

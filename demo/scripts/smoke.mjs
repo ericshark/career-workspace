@@ -22,6 +22,7 @@ try {
     ["phone", { width: 390, height: 844 }],
   ]) {
     const context = await browser.newContext({
+      colorScheme: "dark",
       viewport,
       hasTouch: name === "phone",
       permissions: ["clipboard-read", "clipboard-write"],
@@ -63,14 +64,14 @@ try {
       await page.goto(base + path);
       check(
         await page
-          .getByRole("link", { name: "Run locally" })
+          .getByRole("link", { name: "How to set it up" })
           .first()
           .waitFor()
           .then(
             () => true,
             () => false,
           ),
-        `${name} ${path}: Run locally is visible`,
+        `${name} ${path}: setup link is visible`,
       );
     };
     const go = async (label) => {
@@ -200,11 +201,12 @@ try {
     await settle("review");
 
     await page.goto(`${base}/run-locally`);
-    check(
-      await seen("./scripts/setup.sh"),
-      `${name} run locally shows commands`,
-    );
-    await page.getByRole("button", { name: "Copy all commands" }).click();
+    check(/\/setup$/.test(page.url()), `${name} old setup address redirects`);
+    check(await seen("./scripts/setup.sh"), `${name} setup shows commands`);
+    await page
+      .getByRole("button", { name: "Copy all commands" })
+      .first()
+      .click();
     const copied = await page
       .evaluate(() => navigator.clipboard.readText())
       .catch(() => "");
@@ -215,14 +217,40 @@ try {
       `${name} commands copy`,
     );
     for (const label of [
+      "Install what you need",
+      "Download, set up and run",
       "Add your profile and resume",
-      "Connect AI (optional)",
+      "Connect your AI (optional)",
+      "Option 3: ChatGPT plan",
+      "Connect your email (optional)",
       "Log your first application",
       "Back to the demo",
       "View on GitHub",
     ])
-      check(await seen(label), `${name} run locally: ${label}`);
-    await settle("run-locally");
+      check(await seen(label), `${name} setup: ${label}`);
+    await settle("setup");
+    if (shots)
+      await page.screenshot({
+        path: `${shots}/${name}-setup-full.png`,
+        fullPage: true,
+      });
+
+    const root = page.locator("html");
+    check(
+      !/\bdark\b/.test((await root.getAttribute("class")) ?? ""),
+      `${name} night mode is off by default`,
+    );
+    await page
+      .getByRole("button", { name: "Night mode" })
+      .filter({ visible: true })
+      .click();
+    check(
+      /\bdark\b/.test((await root.getAttribute("class")) ?? ""),
+      `${name} night mode turns on`,
+    );
+    await page.goto(`${base}/`);
+    await seen("Complete the take-home exercise");
+    await settle("dark");
 
     check(!outside.length, `${name} no outside requests ${outside}`);
     check(!apiCalls.length, `${name} no API network calls ${apiCalls}`);

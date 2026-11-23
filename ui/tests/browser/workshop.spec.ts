@@ -996,7 +996,10 @@ for (const [width, height, scheme] of [
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
     });
-    await page.emulateMedia({ colorScheme: scheme });
+    await page.addInitScript(
+      (saved) => localStorage.setItem("career-ui.theme", saved),
+      scheme,
+    );
     await page.setViewportSize({ width, height });
     let state = await seed(
       request,

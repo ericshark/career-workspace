@@ -71,7 +71,10 @@ test("New shows once, in-place summary, no priority, completion and dismissal", 
   for (const width of [1280, 390])
     for (const theme of ["light", "dark"]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.emulateMedia({ colorScheme: theme as "light" | "dark" });
+      await page.addInitScript(
+        (saved) => localStorage.setItem("career-ui.theme", saved),
+        theme,
+      );
       await page.goto("/actions");
       // New is shown on the first visit only; displaying it saves it as seen.
       if (visit++ === 0)
