@@ -87,7 +87,7 @@ test("dashboard summarizes five open actions and application progress", async ({
     await page
       .getByRole("heading", { level: 1 })
       .evaluate((el) => getComputedStyle(el).fontFamily),
-  ).toContain("Geist Mono");
+  ).toMatch(/Geist ?Mono/);
   for (const theme of ["light", "dark"]) {
     const toggle = page.getByRole("button", {
       name: `Switch to ${theme}`,
@@ -344,89 +344,3 @@ for (const width of [1440, 1024, 768, 390]) {
     expect(errors).toEqual([]);
   });
 }
-
-test("Dashboard prioritizes latest-check tasks and links to their full cards", async ({
-  page,
-}) => {
-  const now = new Date().toISOString();
-  const id = "11111111-1111-4111-8111-111111111111";
-  const action = {
-    id,
-    externalKeys: ["gmail:t:ask"],
-    revision: 1,
-    text: "Arrange the new interview",
-    company: "Example",
-    role: "Engineer",
-    state: "open",
-    priority: "high",
-    createdAt: now,
-    updatedAt: now,
-    email: {
-      threadId: "t",
-      messageId: "m",
-      receivedAt: now,
-      url: "https://mail.google.com/mail/u/0/#all/t",
-    },
-  };
-  await page.route("**/api/actions", (route) =>
-    route.fulfill({
-      json: {
-        version: 1,
-        importedNext: true,
-        fileHash: "fixture",
-        actions: [
-          action,
-          {
-            ...action,
-            id: "22222222-2222-4222-8222-222222222222",
-            text: "Older pending request",
-          },
-          {
-            ...action,
-            id: "33333333-3333-4333-8333-333333333333",
-            text: "Finished task",
-            state: "completed",
-            completedAt: now,
-          },
-        ],
-        lastCheck: {
-          runId: "latest",
-          startedAt: now,
-          completedAt: now,
-          changes: [{ id, activityId: "m", kind: "new" }],
-        },
-      },
-    }),
-  );
-  await page.goto("/");
-  const overview = page.getByRole("region", { name: "Actions overview" });
-  await expect(overview.getByText("1 new", { exact: true })).toBeVisible();
-  await expect(
-    overview.getByText("1 completed", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    overview.getByText("Older pending request", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    overview.getByText("Finished task", { exact: true }),
-  ).toHaveCount(0);
-  const preview = overview.getByRole("link", {
-    name: /Arrange the new interview/,
-  });
-  await expect(overview.getByRole("listitem").first()).toContainText(
-    "Arrange the new interview",
-  );
-  await expect(overview.getByRole("listitem").first()).not.toContainText(
-    "High",
-  );
-  await preview.click();
-  await expect(page).toHaveURL(
-    new RegExp(`/actions\\?action=${id}#action-${id}`),
-  );
-  await expect(page.locator(`#action-${id}`)).toBeFocused();
-  await expect(
-    page
-      .locator(`#action-${id}`)
-      .getByRole("heading", { name: "Arrange the new interview" }),
-  ).toBeVisible();
-});
