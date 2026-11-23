@@ -15,11 +15,10 @@ You need [Git](https://git-scm.com/downloads) and [Node.js 24 or newer](https://
 on Linux, macOS, or Ubuntu in [WSL 2](https://learn.microsoft.com/windows/wsl/install) on Windows.
 
 ```sh
-curl -fsSL https://career-workspace-demo.vercel.app/setup.mjs -o career-setup.mjs
-node career-setup.mjs
+npx create-career-workspace
 ```
 
-The first line downloads the setup program and the second runs it. It asks a few
+If npm asks to install `create-career-workspace`, press Enter. Setup asks a few
 questions. Press Enter to skip anything optional.
 
 ### What setup does
@@ -30,7 +29,7 @@ questions. Press Enter to skip anything optional.
 4. **Installs resume tools** if you want PDF resumes.
 5. **Starts the app** at `http://127.0.0.1:3001`, or the next free port.
 
-Run the second line again to continue where you stopped. Your files are kept.
+Run the command again to continue where you stopped. Your files are kept.
 API keys stay in one private file on your computer.
 
 ### What it uses

@@ -15,7 +15,7 @@ The browser demo in `demo/` is live. The full app runs locally and is not deploy
 
 ## Setup command
 
-`cli/` is the guided setup. Each demo build publishes it as one file at `/setup.mjs`, from `main`. npm 12 refuses to run packages from a URL, so Node runs the file directly. `cli/package.json` is ready for npm as `create-career-workspace`, but it is not published there. Raise its version when it changes.
+`cli/` is the guided setup, published on npm as `create-career-workspace`. Publishing is manual and needs two-factor approval: raise the version in `cli/package.json`, then run `npm publish` in `cli/`. Each demo build also publishes it from `main` as one file at `/setup.mjs`, which older links use.
 
 ## Configuration
 
