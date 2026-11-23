@@ -20,7 +20,7 @@ const types = {
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
   ".txt": "text/plain",
-  ".tgz": "application/gzip",
+  ".mjs": "text/javascript",
 };
 
 export function serve(port) {

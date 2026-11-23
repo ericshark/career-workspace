@@ -13,7 +13,7 @@ const REPO = "https://github.com/ericshark/career-workspace";
 const STEPS: [string, React.ReactNode][] = [
   ["1. Check what you need", <Guide key="need" text={guide.need} />],
   [
-    "2. Run one command",
+    "2. Run the setup",
     <div key="run" className="space-y-4">
       <Commands commands={guide.commands} />
       <Guide text={guide.after} />
@@ -44,8 +44,8 @@ export default function SetupPage() {
           How to set it up
         </h1>
         <p className="text-muted-foreground">
-          One command sets up the full app on your computer, with an empty
-          workspace. Your data stays there.
+          A short guided setup installs the full app on your computer, with an
+          empty workspace. Your data stays there.
         </p>
         {links}
       </header>

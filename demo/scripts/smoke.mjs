@@ -202,7 +202,7 @@ try {
 
     await page.goto(`${base}/run-locally`);
     check(/\/setup$/.test(page.url()), `${name} old setup address redirects`);
-    check(await seen(/^npx https/), `${name} setup shows commands`);
+    check(await seen("node career-setup.mjs"), `${name} setup shows commands`);
     await page
       .getByRole("button", { name: "Copy all commands" })
       .first()
@@ -211,14 +211,14 @@ try {
       .evaluate(() => navigator.clipboard.readText())
       .catch(() => "");
     check(
-      /^npx https:\/\/career-workspace-demo\.vercel\.app\/cli\.tgz$/.test(
+      /^curl -fsSL https:\/\/career-workspace-demo\.vercel\.app\/setup\.mjs -o career-setup\.mjs\nnode career-setup\.mjs$/.test(
         copied,
       ),
       `${name} commands copy`,
     );
     for (const label of [
       "Check what you need",
-      "Run one command",
+      "Run the setup",
       "What setup does",
       "What it uses",
       "Finish up",

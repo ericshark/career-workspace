@@ -19,10 +19,10 @@ const forbidden = [
   [/\b\(?\d{3}\)?[ .-]\d{3}[.-]\d{4}\b/, "a phone number"],
 ];
 for (const file of files) {
-  if (!/\.(html|js|tgz|css|json|txt|svg|woff2|ico|map)$/.test(file))
+  if (!/\.(html|js|mjs|css|json|txt|svg|woff2|ico|map)$/.test(file))
     problems.push(`Unexpected file type: ${file}`);
   if (/\.map$/.test(file)) problems.push(`Source map: ${file}`);
-  if (/\.(woff2|tgz)$/.test(file)) continue;
+  if (/\.(woff2)$/.test(file)) continue;
   const text = fs.readFileSync(file, "utf8");
   for (const [pattern, label] of forbidden) {
     const hit = pattern.exec(text);
@@ -30,8 +30,8 @@ for (const file of files) {
       problems.push(`${path.relative(out, file)} contains ${label}: ${hit[0]}`);
   }
 }
-if (!files.includes(path.join(out, "cli.tgz")))
-  problems.push("Missing cli.tgz");
+if (!files.includes(path.join(out, "setup.mjs")))
+  problems.push("Missing setup.mjs");
 for (const page of [
   "index",
   "tracker",

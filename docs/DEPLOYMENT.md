@@ -15,7 +15,7 @@ The browser demo in `demo/` is live. The full app runs locally and is not deploy
 
 ## Setup command
 
-`cli/` is the guided setup. Each demo build packs it to `/cli.tgz`, so `npx https://career-workspace-demo.vercel.app/cli.tgz` runs the version from `main`. Raise `cli/package.json`'s version when it changes. It is not on npm.
+`cli/` is the guided setup. Each demo build publishes it as one file at `/setup.mjs`, from `main`. npm 12 refuses to run packages from a URL, so Node runs the file directly. `cli/package.json` is ready for npm as `create-career-workspace`, but it is not published there. Raise its version when it changes.
 
 ## Configuration
 

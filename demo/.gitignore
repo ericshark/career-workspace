@@ -4,4 +4,4 @@
 /node_modules/
 /.vercel/
 /next-env.d.ts
-/public/cli.tgz
+/public/setup.mjs

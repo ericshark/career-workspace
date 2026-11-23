@@ -81,17 +81,20 @@ fs.writeFileSync(
   }),
 );
 
-// Publish the setup command with the site, so one npx command installs it.
-const publicDir = path.join(demo, "public");
-fs.mkdirSync(publicDir, { recursive: true });
-const packed = JSON.parse(
-  execFileSync("npm", ["pack", "--json", "--pack-destination", out], {
-    cwd: path.join(repo, "cli"),
-    encoding: "utf8",
-  }),
+// Publish the setup command with the site as one file that Node runs directly.
+const cli = (name) => fs.readFileSync(path.join(repo, "cli", name), "utf8");
+const single = cli("index.mjs").replace(
+  /^import \{[^}]*\} from "\.\/lib\.mjs";$/m,
+  () =>
+    cli("lib.mjs")
+      .replace(/^import (?:fs|path) from .*\n/gm, "")
+      .replace(/^export /gm, ""),
 );
-const [{ filename }] = Array.isArray(packed) ? packed : Object.values(packed);
-fs.copyFileSync(path.join(out, filename), path.join(publicDir, "cli.tgz"));
+if (single.includes("./lib.mjs")) throw new Error("cli/ has another import");
+const published = path.join(demo, "public", "setup.mjs");
+fs.mkdirSync(path.dirname(published), { recursive: true });
+fs.writeFileSync(published, single);
+execFileSync(process.execPath, ["--check", published], { stdio: "inherit" });
 
 // The demo must use the same versions as the app it shows.
 const read = (p) => JSON.parse(fs.readFileSync(path.join(repo, p), "utf8"));

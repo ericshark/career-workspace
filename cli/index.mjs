@@ -75,7 +75,7 @@ function ask(question, { hidden = false } = {}) {
     rl.on("SIGINT", () => rl.close());
     rl.on("close", () => {
       if (!answered)
-        reject(new Stop("Setup stopped. Run the same command to continue."));
+        reject(new Stop("Setup stopped. Run setup again to continue."));
     });
     rl.question(question, (answer) => {
       answered = true;
@@ -117,7 +117,7 @@ function run(command, args, cwd) {
     throw new Stop(`Could not run ${command}: ${result.error.message}`);
   if (result.status !== 0)
     throw new Stop(
-      `${command} failed. Fix the problem above, then run the same command to continue.`,
+      `${command} failed. Fix the problem above, then run setup again to continue.`,
     );
 }
 
@@ -125,7 +125,7 @@ function checkComputer() {
   heading("Check this computer");
   if (process.platform === "win32")
     throw new Stop(
-      "On Windows, install Ubuntu in WSL 2 and run this command inside it: https://learn.microsoft.com/windows/wsl/install",
+      "On Windows, install Ubuntu in WSL 2 and run setup inside it: https://learn.microsoft.com/windows/wsl/install",
     );
   if (Number(process.versions.node.split(".")[0]) < 24)
     throw new Stop(
@@ -133,8 +133,7 @@ function checkComputer() {
     );
   ok(`Node.js ${process.version}`);
   for (const tool of ["git", "bash", "npm"])
-    if (!onPath(tool))
-      throw new Stop(`Install ${tool}, then run this command again.`);
+    if (!onPath(tool)) throw new Stop(`Install ${tool}, then run setup again.`);
   ok("Git");
 }
 
