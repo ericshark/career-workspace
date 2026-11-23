@@ -4,6 +4,9 @@ A local app for organizing your job search, keeping track of applications and
 recruiting tasks, reviewing roles, and saving career notes. Start with an empty
 workspace and add your own data.
 
+**[Try the demo](https://career-workspace-demo.vercel.app)** in your browser with fictional data.
+No account or install needed.
+
 ![Dashboard with application counts, an application flow chart, updates and upcoming deadlines](docs/screenshots/dashboard.png)
 
 ## Quick start
