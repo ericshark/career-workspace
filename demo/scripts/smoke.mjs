@@ -287,8 +287,6 @@ try {
     for (const skill of [
       "Career Workspace Setup",
       "Career Check",
-      "Inbox Check",
-      "Actions Check",
       "Opportunity Check",
       "Tailor Resume",
       "ATS Check",

@@ -115,37 +115,27 @@ const screens = [
 const skills = [
   [
     "Career Workspace Setup",
-    "Install or finish configuring the workspace, including your profile, resume, connections, and shortcut.",
+    "Install and open the local app, or pick up where you left off. Your agent can draft a career profile from your resume and guide you through connections and a launch shortcut.",
     "Run Career Workspace Setup.",
   ],
   [
     "Career Check",
-    "Run Inbox Check and Actions Check together. Use Career Check Quick for recent activity without changing tracker statuses.",
+    "Read recruiting Gmail, match messages to applications, and coordinate local status updates and follow-up tasks. Use Career Check Quick for recent activity without changing tracker statuses.",
     "Run Career Check Dry Run.",
   ],
   [
-    "Inbox Check",
-    "Read recruiting email and update matched application statuses in the local tracker.",
-    "Run Inbox Check.",
-  ],
-  [
-    "Actions Check",
-    "Find and reconcile recruiting tasks and deadlines, including evidence of replies or completion.",
-    "Run Actions Check.",
-  ],
-  [
     "Opportunity Check",
-    "Research a recruiter message or company and assess the role, pay, and fit.",
+    "Start with a recruiter email. The agent checks your application history and public sources, then summarizes the request, employer, compensation clues, and whether it’s worth pursuing.",
     "Run Opportunity Check for the recruiter’s email about this role.",
   ],
   [
     "Tailor Resume",
-    "Use a saved job to create a separate resume from chat, then validate the PDF and review factual changes.",
+    "Use a saved job, your career profile, and your master resume to make a separate job-specific PDF. The agent validates the build and shows what changed, along with Resume Match before and after.",
     "Tailor my resume for the saved Backend Engineer job.",
   ],
   [
     "ATS Check",
-    "Check how a resume parses. The same check runs automatically when you build a resume.",
+    "Check whether a resume’s text can be extracted in the expected reading order. The same check runs automatically when you build a resume.",
     "Run ATS Check on my master resume.",
   ],
 ];
