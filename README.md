@@ -11,52 +11,41 @@ No account or install needed.
 
 ## Quick start
 
-You need [Git](https://git-scm.com/downloads) and [Node.js 24 or newer](https://nodejs.org)
-on Linux, macOS, or Ubuntu in [WSL 2](https://learn.microsoft.com/windows/wsl/install) on Windows.
+Use a local agent or run setup yourself. Both paths install the app on your computer.
+
+### Set up with your agent
+
+Copy this prompt into **Codex** or **Claude Code** running on your computer. It runs the official installer, builds and opens the local app, then guides you through your optional profile, resume, AI, Gmail, and shortcut setup.
+
+```text
+Set up the public Career Workspace (https://github.com/ericshark/career-workspace) on this computer.
+
+Use a local terminal on macOS, Linux, or Ubuntu in WSL 2. Check for Git, Bash, and Node.js 24 or newer with npm. Reuse the current checkout if it is the public repo, otherwise use ~/career-workspace. Verify the repository before reusing it, and ask for another path if the destination contains unrelated files. For a new or incomplete install, run npx --yes create-career-workspace "<absolute workspace path>" --yes --no-start, replacing the placeholder.
+
+Enter the installed workspace, read .claude/skills/career-workspace-setup/SKILL.md, and follow it now. Verify the app opens first, then guide me through the optional steps. I'll enter any credentials directly in the browser or local settings file.
+```
+
+To continue later, open the installed folder in your agent and ask it to run **Career Workspace Setup**.
+
+### Set up manually
+
+Install [Git](https://git-scm.com/downloads) and [Node.js 24 or newer](https://nodejs.org) on Linux, macOS, or Ubuntu in [WSL 2](https://learn.microsoft.com/windows/wsl/install) on Windows. Run setup inside Ubuntu on Windows. Use a folder under your Linux home directory.
 
 ```sh
 npx create-career-workspace
 ```
 
-If npm asks to install `create-career-workspace`, press Enter. Setup asks a few
-questions. Press Enter to skip anything optional.
+Press Enter if npm asks to install the package. The installer asks where to put the workspace and offers optional profile, AI, and PDF setup. You can skip optional steps and return to them later.
 
-### What setup does
-
-1. **Downloads and installs** the app into a folder you choose, with an empty workspace.
-2. **Adds your background.** Drag in a `.md`, `.txt` or `.pdf` file. A LaTeX resume is optional.
-3. **Connects AI.** Choose OpenAI, Claude or none, then API key or subscription, then a model.
-4. **Installs resume tools** if you want PDF resumes.
-5. **Starts the app** at `http://127.0.0.1:3001`, or the next free port.
-
-Run the command again to continue where you stopped. Your files are kept.
-API keys stay in one private file on your computer.
-
-### What it uses
-
-| Tool | Why | Needed? |
-| --- | --- | --- |
-| Git, Node.js and npm | Download, install and run the app | Yes |
-| OpenAI or Claude | Job reviews, resume tailoring and answers | Optional |
-| Python, TeX and Poppler | Build resume PDFs | Optional |
-| Claude Code with a Gmail connector | Read-only recruiting email checks | Optional |
-
-### Finish up
-
-Setup can't do these for you:
-
-- **ChatGPT subscription:** in the app, open **Apply → Models → Continue with ChatGPT** and sign in.
-- **Your files:** read through `profile/career.md`, remove private details, and put your
-  resume in `source/tech/resume.tex`.
-- **Email checks:** in Claude, open **Settings → Connectors → Gmail** and sign in. Open the
-  app's folder in Claude Code and ask for **Career Check Dry Run**. It saves nothing.
-- **Next time:** start the app with `./scripts/ui.sh` from its folder. Stop it with **Ctrl+C**.
+1. Open the address printed in your terminal. The first launch builds the app.
+2. [Add your profile and resume](#add-your-profile-and-resume), or start with the empty tracker.
+3. For AI features, open **Apply → Models → Continue with ChatGPT** and finish sign-in in your browser, or [configure an API key](#connect-ai). The tracker, Actions, Workshop, and Docs are available with AI skipped.
+4. If you want email checks, [connect Gmail in Claude or Codex](#optional-gmail-checks) and run a dry run.
+5. [Create a shortcut or start the app again](#reopen-career-workspace), then [try your first job](#try-a-job-from-start-to-finish). See [Troubleshooting](#troubleshooting) if setup stalls.
 
 ## Manual setup
 
-Install Git and Node.js 24 or newer on Linux, macOS, or Ubuntu in Windows
-Subsystem for Linux (WSL 2). Run these commands inside the Linux distribution
-when using WSL. On Windows, clone under your Linux home directory for faster I/O.
+If you prefer to clone the repository yourself, run these commands:
 
 ```sh
 git clone https://github.com/ericshark/career-workspace.git
@@ -65,15 +54,23 @@ cd career-workspace
 ./scripts/ui.sh
 ```
 
-Open the URL printed in the terminal, normally
-[http://127.0.0.1:3001](http://127.0.0.1:3001). The first start builds the app.
-Stop it with **Ctrl+C**, or run `./scripts/ui.sh stop` in another terminal.
-Use `./scripts/ui.sh status` to see whether the launcher is running. If the port
-is occupied, start with a different one, for example `CAREER_PORT=3100 ./scripts/ui.sh`.
+Open the address printed in the terminal, normally [http://127.0.0.1:3001](http://127.0.0.1:3001). Setup creates starter files and preserves your existing files when rerun. If the port is occupied, choose another one, for example `CAREER_PORT=3100 ./scripts/ui.sh`.
 
-Setup creates an empty tracker and copies starter profile and resume files.
-Running it again preserves existing files. Tracking, Actions, Workshop, and
-Docs work without an AI connection.
+## Reopen Career Workspace
+
+From the workspace folder, run:
+
+```sh
+node scripts/open-workspace.mjs
+```
+
+This starts the server in the background if needed, waits for it to respond, and opens your browser. Bookmark the address it prints. To use another fixed port, add the port number to the end of the command, for example `node scripts/open-workspace.mjs 3100`, and update your bookmark.
+
+- **Windows with WSL 2:** Create a desktop shortcut with a target like `wsl.exe -d Ubuntu -- bash -lc "node '/path/to/career-workspace/scripts/open-workspace.mjs'"`. Set **Run** to **Minimized** in shortcut properties. Use your distro name and installed path.
+- **macOS:** Create a shortcut in **Shortcuts** with **Run Shell Script**. Enter `node "/absolute/path/to/career-workspace/scripts/open-workspace.mjs"`, then add the shortcut to the Dock.
+- **Linux:** Create an application launcher with a command like `node "/absolute/path/to/career-workspace/scripts/open-workspace.mjs"`. For a desktop entry use `Type=Application` and `Terminal=false`.
+
+If the shortcut cannot find Node, use the absolute path reported by `command -v node` inside the environment where you installed the app. Check the server with `./scripts/ui.sh status` and stop it with `./scripts/ui.sh stop` from the workspace folder.
 
 ## Connect AI
 
@@ -117,8 +114,7 @@ pick a model your account allows. The app never switches from plan usage to
 API billing automatically. You can review or revoke plan permissions from your
 ChatGPT settings. [Official ChatGPT sign-in guide](https://developers.openai.com/siwc/token-sharing-open-source)
 
-The original personal workspace used a Codex CLI subscription login and a
-Claude Code setup token. This edition uses its own ChatGPT sign-in and Claude
+The original personal workspace used a Codex CLI subscription login and a private Claude integration. This edition uses its own ChatGPT sign-in and Claude
 Console API keys. Eligible Claude subscribers can link a Console organization,
 [claim API credits](https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers),
 then use a key from that organization. Eligible ChatGPT subscribers can also
@@ -126,6 +122,8 @@ then use a key from that organization. Eligible ChatGPT subscribers can also
 and use a project key from the linked organization.
 
 ## Add your profile and resume
+
+See the [Resume Guide](docs/resume-guide.md) for creating a draft, replacing a master, or restoring a backup.
 
 Review and Tailor judge each job against two files that only you can provide.
 Setup creates both as placeholders. They are Git-ignored, so they stay on your
@@ -275,13 +273,11 @@ signs in to Gmail. Mail checks run in a desktop agent, such as Claude Code in th
 Claude desktop app, that can use this repository's bundled skills, run local
 scripts, and reach a Gmail connector.
 
-1. Connect Gmail in your agent. In Claude, open **Settings → Connectors**, choose
-   **Gmail**, and sign in with the account that gets your recruiting mail. Choose
-   read-only access where your connector offers it.
-2. Open your `career-workspace` folder in the agent.
-3. Ask it to run **Career Check Dry Run**. It saves nothing. Review the proposed changes.
-4. Ask it to run **Career Check**. It updates your local tracker, recruiting history
-   and Actions.
+1. Sign in to your desktop agent and connect your recruiting mailbox.
+   - **Claude Desktop:** Open **Customize → Connectors**, choose **Gmail**, and sign in to Google. Open the workspace folder in the **Code** tab.
+   - **Codex:** In the ChatGPT desktop app, open **Plugins**, install **Gmail**, and connect your Google account. Open the local workspace folder in Codex and start a new chat there.
+2. Ask for **Career Check Dry Run**. Review the proposed application updates and follow-ups without saving them.
+3. To apply the proposed updates, ask for **Career Check**. It updates your local tracker, recruiting history, and Actions.
 
 You don't need any labels or filters. The checks **only read Gmail**. The skills
 forbid labeling, starring, archiving, moving, deleting or sending mail.

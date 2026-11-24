@@ -65,19 +65,20 @@ const part = (title) => {
   if (!match) throw new Error(`Quick start in README.md needs "### ${title}"`);
   return match[1].trim();
 };
-const intro = quick.split(/^### /m)[0];
-const fence = /```sh\n([\s\S]*?)```/.exec(intro);
-if (!fence) throw new Error("Quick start in README.md needs an sh code block");
-section("Manual setup");
+const agent = part("Set up with your agent");
+const prompt = /^```text\n([\s\S]*?)^```$/m.exec(agent);
+if (!prompt) throw new Error("Agent setup needs a text code block");
 fs.writeFileSync(
   path.join(out, "guide.json"),
   JSON.stringify({
-    need: intro.slice(0, fence.index).trim(),
-    commands: fence[1].trim().split("\n"),
-    after: intro.slice(fence.index + fence[0].length).trim(),
-    does: part("What setup does"),
-    uses: part("What it uses"),
-    finish: part("Finish up"),
+    agentIntro: agent.slice(0, prompt.index).trim(),
+    prompt: prompt[1].trim(),
+    agentAfter: agent.slice(prompt.index + prompt[0].length).trim(),
+    manual: part("Set up manually"),
+    clone: section("Manual setup"),
+    reopen: section("Reopen Career Workspace"),
+    gmail: section("Optional Gmail checks"),
+    troubleshooting: section("Troubleshooting").split("\n\nMIT licensed.")[0],
   }),
 );
 

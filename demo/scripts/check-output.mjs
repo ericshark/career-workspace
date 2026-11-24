@@ -40,6 +40,7 @@ for (const page of [
   "workshop",
   "docs",
   "setup",
+  "how-it-works",
 ])
   if (!files.includes(path.join(out, `${page}.html`)))
     problems.push(`Missing page: ${page}`);

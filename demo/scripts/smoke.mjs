@@ -202,35 +202,83 @@ try {
 
     await page.goto(`${base}/run-locally`);
     check(/\/setup$/.test(page.url()), `${name} old setup address redirects`);
+    const agentTab = page.getByRole("tab", { name: "Set up with your agent" });
+    const manualTab = page.getByRole("tab", { name: "Set up manually" });
     check(
-      await seen("npx create-career-workspace"),
-      `${name} setup shows commands`,
+      (await agentTab.getAttribute("aria-selected")) === "true",
+      `${name}: agent setup opens first`,
+    );
+    await page.getByRole("button", { name: "Copy prompt" }).click();
+    const prompt = await page.locator("pre").textContent();
+    check(
+      prompt?.includes("--yes --no-start") &&
+        (await page.evaluate(() => navigator.clipboard.readText())) === prompt,
+      `${name}: full setup prompt copies`,
+    );
+    await settle("agent setup");
+    if (shots)
+      await page.screenshot({
+        path: `${shots}/${name}-setup-agent.png`,
+        fullPage: true,
+      });
+    await agentTab.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.getByRole("tabpanel", { name: "Set up manually" }).waitFor();
+    check(
+      (await manualTab.getAttribute("aria-selected")) === "true",
+      `${name}: keyboard selects manual setup`,
     );
     await page
       .getByRole("button", { name: "Copy all commands" })
       .first()
       .click();
-    const copied = await page
-      .evaluate(() => navigator.clipboard.readText())
-      .catch(() => "");
     check(
-      /^npx create-career-workspace$/.test(copied),
-      `${name} commands copy`,
+      (await page.evaluate(() => navigator.clipboard.readText())) ===
+        "npx create-career-workspace",
+      `${name}: terminal command copies`,
     );
     for (const label of [
-      "Check what you need",
-      "Run the setup",
-      "What setup does",
-      "What it uses",
-      "Finish up",
+      "Clone with Git",
+      "Reopen Career Workspace",
       "Back to the demo",
-      "View on GitHub",
     ])
-      check(await seen(label), `${name} setup: ${label}`);
-    await settle("setup");
+      check(await seen(label), `${name} manual setup: ${label}`);
+    await settle("manual setup");
     if (shots)
       await page.screenshot({
-        path: `${shots}/${name}-setup-full.png`,
+        path: `${shots}/${name}-setup-manual.png`,
+        fullPage: true,
+      });
+
+    await page
+      .locator("header.sticky")
+      .getByRole("link", { name: "How it works" })
+      .click();
+    await page.waitForURL("**/how-it-works");
+    for (const [label, href] of [
+      ["Dashboard", "/"],
+      ["Actions", "/actions"],
+      ["Apply", "/apply"],
+      ["Tracker", "/tracker"],
+      ["Workshop", "/workshop"],
+      ["Docs", "/docs"],
+    ]) {
+      const link = page
+        .getByRole("heading", { name: label, exact: true })
+        .getByRole("link");
+      check(
+        (await link.getAttribute("href")) === href,
+        `${name}: feature link for ${label}`,
+      );
+    }
+    check(
+      await seen("Career Check Dry Run"),
+      `${name}: Gmail workflow explained`,
+    );
+    await settle("how it works");
+    if (shots)
+      await page.screenshot({
+        path: `${shots}/${name}-how-it-works.png`,
         fullPage: true,
       });
 

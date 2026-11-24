@@ -4,7 +4,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Markdown } from "@/components/Markdown";
 
-function Copy({ text, label }: { text: string; label: string }) {
+export function Copy({ text, label }: { text: string; label: string }) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
   return (
     <Button
@@ -18,8 +18,8 @@ function Copy({ text, label }: { text: string; label: string }) {
             : "Select the text to copy it"
       }
       onClick={() =>
-        void navigator.clipboard
-          .writeText(text)
+        void Promise.resolve()
+          .then(() => navigator.clipboard.writeText(text))
           .then(() => setState("copied"))
           .catch(() => setState("failed"))
           .finally(() => setTimeout(() => setState("idle"), 2000))

@@ -87,11 +87,14 @@ export function Tour({ children }: { children: React.ReactNode }) {
     <>
       {header &&
         createPortal(
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="hidden rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground sm:inline">
+          <div className="demo-guide-links flex shrink-0 items-center gap-1 sm:gap-2">
+            <span className="hidden rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground md:inline">
               Demo · fictional data
             </span>
-            <Button asChild size="sm">
+            <Button asChild size="sm" variant="ghost" className="max-sm:px-2">
+              <Link href="/how-it-works">How it works</Link>
+            </Button>
+            <Button asChild size="sm" className="max-sm:px-2">
               <Link href="/setup" aria-label="How to set it up">
                 <TerminalIcon className="max-sm:hidden" />
                 <span className="sm:hidden">Set it up</span>
