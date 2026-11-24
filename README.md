@@ -15,7 +15,12 @@ Use a local agent or run setup yourself. Both paths install the app on your comp
 
 ### Set up with your agent
 
-Copy this prompt into **Codex** or **Claude Code** running on your computer. It runs the official installer, builds and opens the local app, then guides you through your optional profile, resume, AI, Gmail, and shortcut setup.
+Copy this prompt into **Codex** or **Claude Code** running on your computer. Your agent will:
+
+- **Install and open Career Workspace.** It runs the official installer and verifies that the app opens on your computer.
+- **Prepare your profile and resume.** If you share a resume, it drafts a career profile and can format or refresh a resume draft for you to review.
+- **Guide AI and Gmail setup.** Choose the optional connections you want and complete sign-in yourself.
+- **Help you reopen the app.** Set up a launch shortcut for your computer and bookmark the local address.
 
 ```text
 Set up the public Career Workspace (https://github.com/ericshark/career-workspace) on this computer.

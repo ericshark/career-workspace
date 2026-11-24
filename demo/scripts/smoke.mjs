@@ -208,6 +208,13 @@ try {
       (await agentTab.getAttribute("aria-selected")) === "true",
       `${name}: agent setup opens first`,
     );
+    const agentSetup = page.getByRole("tabpanel", {
+      name: "Set up with your agent",
+    });
+    check(
+      (await agentSetup.getByRole("listitem").count()) === 4,
+      `${name}: agent setup explains all four steps`,
+    );
     await page.getByRole("button", { name: "Copy prompt" }).click();
     const prompt = await page.locator("pre").textContent();
     check(
@@ -275,6 +282,37 @@ try {
       await seen("Career Check Dry Run"),
       `${name}: Gmail workflow explained`,
     );
+    const appGuide = page.getByRole("region", { name: "In the app" });
+    const agentGuide = page.getByRole("region", { name: "In your agent" });
+    for (const skill of [
+      "Career Workspace Setup",
+      "Career Check",
+      "Inbox Check",
+      "Actions Check",
+      "Opportunity Check",
+      "Tailor Resume",
+      "ATS Check",
+    ]) {
+      check(
+        await agentGuide
+          .getByRole("heading", { name: skill, exact: true })
+          .isVisible(),
+        `${name}: explains ${skill}`,
+      );
+    }
+    check(
+      await appGuide
+        .getByText("Uses your AI connection", { exact: true })
+        .isVisible(),
+      `${name}: app authentication is identified`,
+    );
+    const jump = page
+      .getByRole("navigation", { name: "On this page" })
+      .getByRole("link", { name: "In your agent" });
+    await jump.focus();
+    await page.keyboard.press("Enter");
+    await page.waitForURL("**/how-it-works#in-your-agent");
+    await page.evaluate(() => window.scrollTo(0, 0));
     await settle("how it works");
     if (shots)
       await page.screenshot({
